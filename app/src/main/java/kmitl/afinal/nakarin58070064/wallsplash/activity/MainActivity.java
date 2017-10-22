@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvViewAll;
     private Menu menu;
     private MyWallAdapter adapter;
+    private boolean collapse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,45 +123,46 @@ public class MainActivity extends AppCompatActivity {
                 headerMenuWrapper.setAlpha(alpha);
             }
         });
+    }
 
-        /*
-            appbar scrolling behavior
-         */
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                float scrollRange = appBarLayout.getTotalScrollRange();
+    private void setToolBarOverflowIconColor(int color) {
+        toolbar.setTitleTextColor(color);
+        Drawable drawable = toolbar.getOverflowIcon();
+        if (drawable != null) {
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable.mutate(), color);
+            toolbar.setOverflowIcon(drawable);
+        }
 
-                if (scrollRange + verticalOffset == 0) {
-                    // collapsed
-                    toolbar.setTitleTextColor(Color.BLACK);
-                    headerWrapper.setAlpha(0);
-                } else {
-                    int bright = (int) ((scrollRange + verticalOffset) / scrollRange * 255.0f);
-                    int color = Color.rgb(bright, bright, bright);
-
-                    toolbar.setTitleTextColor(color);
-                    Drawable drawable = toolbar.getOverflowIcon();
-                    if (drawable != null) {
-                        drawable = DrawableCompat.wrap(drawable);
-                        DrawableCompat.setTint(drawable.mutate(), color);
-                        toolbar.setOverflowIcon(drawable);
-                    }
-
-                    if (menu != null) {
-                        MenuTintUtils.tintAllIcons(menu, color);
-                    }
-
-                    headerWrapper.setAlpha((scrollRange + verticalOffset) / scrollRange);
-                }
-            }
-        });
+        MenuTintUtils.tintAllIcons(menu, color);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         this.menu = menu;
+
+        /*
+            appbar scrolling behavior
+         */
+        setToolBarOverflowIconColor(Color.WHITE); // default
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                float scrollRange = appBarLayout.getTotalScrollRange();
+                float offsetRatio = (scrollRange + verticalOffset) / scrollRange;
+
+                if (!collapse && offsetRatio < 0.2) {
+                    collapse = true;
+                    setToolBarOverflowIconColor(Color.BLACK);
+                } else if (collapse && offsetRatio >= 0.2) {
+                    collapse = false;
+                    setToolBarOverflowIconColor(Color.WHITE);
+                }
+                headerWrapper.setAlpha(offsetRatio);
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 }
