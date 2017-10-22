@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WallSplash</string>
+    <string name="my_wallpapers">My\nWallpapers</string>
+    <string name="view_all">VIEW ALL</string>
 </resources>
