@@ -2,4 +2,7 @@
     <string name="app_name">WallSplash</string>
     <string name="my_wallpapers">My\nWallpapers</string>
     <string name="view_all">VIEW ALL</string>
+    <string name="something_wrong">Something wrong.</string>
+    <string name="trending">Trending</string>
+    <string name="_new">New</string>
 </resources>

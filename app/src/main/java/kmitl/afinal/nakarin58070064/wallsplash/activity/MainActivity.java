@@ -22,6 +22,7 @@ import android.widget.TextView;
 import jp.wasabeef.blurry.Blurry;
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.MyWallAdapter;
+import kmitl.afinal.nakarin58070064.wallsplash.fragment.ShowcaseFragment;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ImageUtils;
 import kmitl.afinal.nakarin58070064.wallsplash.util.MenuTintUtils;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ScreenUtils;
@@ -38,13 +39,21 @@ public class MainActivity extends AppCompatActivity {
     private Menu menu;
     private MyWallAdapter adapter;
     private boolean collapse;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initInstances();
         defineDesign();
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_container, new ShowcaseFragment())
+                    .commit();
+        }
     }
 
     private void initInstances() {
@@ -75,12 +84,16 @@ public class MainActivity extends AppCompatActivity {
         /*
             update header image bg
          */
-        Bitmap bitmap = ImageUtils.drawableToBitmap(ScreenUtils.getCurrentWallpaper(this));
+        bitmap = ImageUtils.drawableToBitmap(ScreenUtils.getCurrentWallpaper(this));
         Blurry.with(this)
                 .color(Color.argb(100, 0, 0, 0))
                 .radius(2).sampling(32)
                 .from(bitmap)
                 .into(imageHeader);
+        if (bitmap != null && !bitmap.isRecycled()) {
+            bitmap.recycle();
+            bitmap = null;
+        }
 
         /*
             header content position
