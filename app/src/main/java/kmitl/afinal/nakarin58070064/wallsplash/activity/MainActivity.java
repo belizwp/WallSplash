@@ -84,16 +84,11 @@ public class MainActivity extends AppCompatActivity {
         /*
             update header image bg
          */
-        bitmap = ImageUtils.drawableToBitmap(ScreenUtils.getCurrentWallpaper(this));
         Blurry.with(this)
                 .color(Color.argb(100, 0, 0, 0))
                 .radius(2).sampling(32)
-                .from(bitmap)
+                .from(ImageUtils.drawableToBitmap(ScreenUtils.getCurrentWallpaper(this)))
                 .into(imageHeader);
-        if (bitmap != null && !bitmap.isRecycled()) {
-            bitmap.recycle();
-            bitmap = null;
-        }
 
         /*
             header content position
@@ -136,6 +131,26 @@ public class MainActivity extends AppCompatActivity {
                 headerMenuWrapper.setAlpha(alpha);
             }
         });
+
+        /*
+            appbar scrolling behavior
+         */
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                float scrollRange = appBarLayout.getTotalScrollRange();
+                float offsetRatio = (scrollRange + verticalOffset) / scrollRange;
+
+                if (!collapse && offsetRatio < 0.2) {
+                    collapse = true;
+                    setToolBarOverflowIconColor(Color.BLACK);
+                } else if (collapse && offsetRatio >= 0.2) {
+                    collapse = false;
+                    setToolBarOverflowIconColor(Color.WHITE);
+                }
+                headerWrapper.setAlpha(offsetRatio);
+            }
+        });
     }
 
     private void setToolBarOverflowIconColor(int color) {
@@ -154,27 +169,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         this.menu = menu;
-
-        /*
-            appbar scrolling behavior
-         */
         setToolBarOverflowIconColor(Color.WHITE); // default
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                float scrollRange = appBarLayout.getTotalScrollRange();
-                float offsetRatio = (scrollRange + verticalOffset) / scrollRange;
-
-                if (!collapse && offsetRatio < 0.2) {
-                    collapse = true;
-                    setToolBarOverflowIconColor(Color.BLACK);
-                } else if (collapse && offsetRatio >= 0.2) {
-                    collapse = false;
-                    setToolBarOverflowIconColor(Color.WHITE);
-                }
-                headerWrapper.setAlpha(offsetRatio);
-            }
-        });
 
         return super.onCreateOptionsMenu(menu);
     }
