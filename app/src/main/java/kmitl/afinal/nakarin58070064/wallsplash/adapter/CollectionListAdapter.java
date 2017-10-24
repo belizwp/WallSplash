@@ -6,22 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
-import kmitl.afinal.nakarin58070064.wallsplash.adapter.holder.MyWallHolder;
+import kmitl.afinal.nakarin58070064.wallsplash.adapter.holder.CollectionHolder;
 
-public class MyWallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        View v = inflater.inflate(R.layout.item_my_wallpaper, parent, false);
+        View v = inflater.inflate(R.layout.item_collection, parent, false);
 
-        return new MyWallHolder(v);
+        return new CollectionHolder(v);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        CollectionHolder collection = (CollectionHolder) holder;
+        collection.imageView.setImageResource(R.drawable.happy);
     }
 
     @Override

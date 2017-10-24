@@ -5,7 +5,7 @@
     tools:context="kmitl.afinal.nakarin58070064.wallsplash.fragment.WallpaperListFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvWallpaperList"
+        android:id="@+id/rvCollectionList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

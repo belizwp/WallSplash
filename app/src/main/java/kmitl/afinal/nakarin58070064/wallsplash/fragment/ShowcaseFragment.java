@@ -1,16 +1,20 @@
 package kmitl.afinal.nakarin58070064.wallsplash.fragment;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
+import kmitl.afinal.nakarin58070064.wallsplash.util.MenuTintUtils;
 
 public class ShowcaseFragment extends Fragment {
 
@@ -22,6 +26,7 @@ public class ShowcaseFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_showcase, container, false);
         initInstances(rootView, savedInstanceState);
+        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -41,7 +46,7 @@ public class ShowcaseFragment extends Fragment {
                     case 0:
                         return WallpaperListFragment.newInstance();
                     case 1:
-                        return WallpaperListFragment.newInstance();
+                        return CollectionListFragment.newInstance();
                     default:
                         return null;
                 }
@@ -51,9 +56,9 @@ public class ShowcaseFragment extends Fragment {
             public CharSequence getPageTitle(int position) {
                 switch (position) {
                     case 0:
-                        return getString(R.string.trending);
+                        return getString(R.string.photos);
                     case 1:
-                        return getString(R.string._new);
+                        return getString(R.string.collections);
                     default:
                         return null;
                 }
@@ -63,4 +68,10 @@ public class ShowcaseFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_showcase, menu);
+        MenuTintUtils.tintAllIcons(menu, Color.WHITE);
+    }
 }
