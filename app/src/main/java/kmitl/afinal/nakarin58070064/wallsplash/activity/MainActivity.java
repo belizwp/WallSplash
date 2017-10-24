@@ -1,6 +1,5 @@
 package kmitl.afinal.nakarin58070064.wallsplash.activity;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private Menu menu;
     private MyWallAdapter adapter;
     private boolean collapse;
-    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         Blurry.with(this)
                 .color(Color.argb(100, 0, 0, 0))
                 .radius(2).sampling(32)
+                .async()
                 .from(ImageUtils.drawableToBitmap(ScreenUtils.getCurrentWallpaper(this)))
                 .into(imageHeader);
 
