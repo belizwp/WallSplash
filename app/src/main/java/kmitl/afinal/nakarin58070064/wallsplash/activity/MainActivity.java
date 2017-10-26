@@ -1,6 +1,7 @@
 package kmitl.afinal.nakarin58070064.wallsplash.activity;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
@@ -23,7 +24,6 @@ import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.MyWallAdapter;
 import kmitl.afinal.nakarin58070064.wallsplash.fragment.ShowcaseFragment;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ImageUtils;
-import kmitl.afinal.nakarin58070064.wallsplash.util.MenuTintUtils;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ScreenUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,9 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout headerMenuWrapper;
     private RecyclerView rvMyWall;
     private TextView tvViewAll;
-    private Menu menu;
     private MyWallAdapter adapter;
-    private boolean collapse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,19 +135,15 @@ public class MainActivity extends AppCompatActivity {
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                float scrollRange = appBarLayout.getTotalScrollRange();
-                float offsetRatio = (scrollRange + verticalOffset) / scrollRange;
-
-                if (!collapse && offsetRatio < 0.2) {
-                    collapse = true;
-                    setToolBarOverflowIconColor(Color.BLACK);
-                } else if (collapse && offsetRatio >= 0.2) {
-                    collapse = false;
-                    setToolBarOverflowIconColor(Color.WHITE);
-                }
+                int scrollRange = appBarLayout.getTotalScrollRange();
+                float offsetRatio = (float) (scrollRange + verticalOffset) / scrollRange;
+                int bright = (int) (offsetRatio * 255);
+                int color = Color.rgb(bright, bright, bright);
+                setToolBarOverflowIconColor(color);
                 headerWrapper.setAlpha(offsetRatio);
             }
         });
+
     }
 
     private void setToolBarOverflowIconColor(int color) {
@@ -161,15 +155,19 @@ public class MainActivity extends AppCompatActivity {
             toolbar.setOverflowIcon(drawable);
         }
 
-        MenuTintUtils.tintAllIcons(menu, color);
+        Menu mm = toolbar.getMenu();
+        for (int i = 0; i < mm.size(); i++) {
+            Drawable icon = mm.getItem(i).getIcon();
+            if (icon != null) {
+                icon.mutate();
+                icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        this.menu = menu;
-        setToolBarOverflowIconColor(Color.WHITE); // default
-
         return super.onCreateOptionsMenu(menu);
     }
 }

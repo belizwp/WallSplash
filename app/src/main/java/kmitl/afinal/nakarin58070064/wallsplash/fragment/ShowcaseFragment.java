@@ -1,7 +1,5 @@
 package kmitl.afinal.nakarin58070064.wallsplash.fragment;
 
-
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
-import kmitl.afinal.nakarin58070064.wallsplash.util.MenuTintUtils;
 
 public class ShowcaseFragment extends Fragment {
 
@@ -70,8 +67,7 @@ public class ShowcaseFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_showcase, menu);
-        MenuTintUtils.tintAllIcons(menu, Color.WHITE);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }
