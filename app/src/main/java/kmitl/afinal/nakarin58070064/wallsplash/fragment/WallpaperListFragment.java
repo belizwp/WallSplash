@@ -1,12 +1,13 @@
 package kmitl.afinal.nakarin58070064.wallsplash.fragment;
 
-
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
+import kmitl.afinal.nakarin58070064.wallsplash.activity.WallpaperActivity;
+import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.WallpaperListAdapter;
 import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
@@ -71,12 +74,39 @@ public class WallpaperListFragment extends Fragment {
         int space = (int) ScreenUtils.convertDpToPixel(8, getContext());
         rvWallpaperList.addItemDecoration(new GridSpacingItemDecoration(3, space, true));
         rvWallpaperList.setAdapter(adapter);
+        rvWallpaperList.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),
+                rvWallpaperList, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Photo photo = photoList.get(position);
+                transition(view, photo);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
 
         if (savedInstanceState != null) {
             photoList = savedInstanceState.getParcelableArrayList(KEY_PHOTO_LIST);
             display();
         } else {
             getPhotos();
+        }
+    }
+
+    private void transition(View view, Photo photo) {
+        Intent intent = new Intent(getContext(), WallpaperActivity.class);
+        intent.putExtra(Photo.class.getSimpleName(), photo);
+
+        if (Build.VERSION.SDK_INT < 21) {
+            startActivity(intent);
+        } else {
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(getActivity(), view,
+                            getString(R.string.transition_photo));
+            startActivity(intent, options.toBundle());
         }
     }
 
@@ -90,7 +120,6 @@ public class WallpaperListFragment extends Fragment {
         call.enqueue(new Callback<List<Photo>>() {
             @Override
             public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
-                Log.d("API", "onResponse");
                 if (response.isSuccessful()) {
                     photoList = response.body();
                     display();
@@ -99,7 +128,7 @@ public class WallpaperListFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Photo>> call, Throwable t) {
-                Log.d("API", "onFailure " + t.getMessage());
+
             }
         });
     }
