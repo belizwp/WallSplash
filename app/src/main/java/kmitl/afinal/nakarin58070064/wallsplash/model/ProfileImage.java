@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-class ProfileImage implements Parcelable {
+public class ProfileImage implements Parcelable {
 
     @SerializedName("small")
     @Expose

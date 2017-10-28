@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-class Links implements Parcelable {
+public class Links implements Parcelable {
 
     @SerializedName("self")
     @Expose
