@@ -1,5 +1,6 @@
 package kmitl.afinal.nakarin58070064.wallsplash.util;
 
+import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.res.Resources;
@@ -45,10 +46,15 @@ public class ScreenUtils {
         return result;
     }
 
-
     public static Drawable getCurrentWallpaper(Context context) {
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
         Drawable wallpaperDrawable = wallpaperManager.getDrawable();
         return wallpaperDrawable;
+    }
+
+    public static DisplayMetrics getDisplaySize(Activity activity) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        return metrics;
     }
 }

@@ -81,6 +81,30 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/action_share"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/ic_share" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="Share" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/action_unsplash"
         android:layout_width="match_parent"
         android:layout_height="48dp"

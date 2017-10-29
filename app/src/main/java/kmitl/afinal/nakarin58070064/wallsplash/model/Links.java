@@ -23,6 +23,12 @@ public class Links implements Parcelable {
     @SerializedName("portfolio")
     @Expose
     private String portfolio;
+    @SerializedName("download")
+    @Expose
+    private String download;
+    @SerializedName("download_location")
+    @Expose
+    private String download_location;
 
     protected Links(Parcel in) {
         self = in.readString();
@@ -30,6 +36,8 @@ public class Links implements Parcelable {
         photos = in.readString();
         likes = in.readString();
         portfolio = in.readString();
+        download = in.readString();
+        download_location = in.readString();
     }
 
     @Override
@@ -39,6 +47,8 @@ public class Links implements Parcelable {
         dest.writeString(photos);
         dest.writeString(likes);
         dest.writeString(portfolio);
+        dest.writeString(download);
+        dest.writeString(download_location);
     }
 
     @Override
@@ -96,5 +106,21 @@ public class Links implements Parcelable {
 
     public void setPortfolio(String portfolio) {
         this.portfolio = portfolio;
+    }
+
+    public String getDownload() {
+        return download;
+    }
+
+    public void setDownload(String download) {
+        this.download = download;
+    }
+
+    public String getDownload_location() {
+        return download_location;
+    }
+
+    public void setDownload_location(String download_location) {
+        this.download_location = download_location;
     }
 }
