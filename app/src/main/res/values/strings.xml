@@ -14,4 +14,5 @@
     <string name="share">Share</string>
     <string name="view_on_unsplash_com">View on unsplash.com</string>
     <string name="action_share">Share via</string>
+    <string name="total_photos">%d Photos</string>
 </resources>

@@ -17,7 +17,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="@drawable/fg_mask">
+        android:foreground="@drawable/fg_wallpaper_mask">
 
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/photoView"

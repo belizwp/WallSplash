@@ -45,7 +45,7 @@ public interface UnsplashAPI {
     Call<SearchResults> searchPhotos(@Query("query") String query, @Query("page") Integer page, @Query("per_page") Integer perPage);
 
     @GET("collections")
-    Call<List<Collection>> getCollections(@Query("page") Integer page, @Query("per_page") Integer perPage);
+    Call<List<kmitl.afinal.nakarin58070064.wallsplash.model.Collection>> getCollections(@Query("page") Integer page, @Query("per_page") Integer perPage);
 
     @GET("collections/features")
     Call<List<Collection>> getFeaturedCollections(@Query("page") Integer page, @Query("per_page") Integer perPage);
