@@ -1,6 +1,7 @@
 package kmitl.afinal.nakarin58070064.wallsplash.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -16,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
+import kmitl.afinal.nakarin58070064.wallsplash.activity.CollectionActivity;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.CollectionListAdapter;
+import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Collection;
 import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
 import kmitl.afinal.nakarin58070064.wallsplash.network.ApiManager;
@@ -74,6 +77,19 @@ public class CollectionListFragment extends Fragment {
         int space = (int) ScreenUtils.convertDpToPixel(8, getContext());
         rvCollectionList.addItemDecoration(new GridSpacingItemDecoration(1, space, true));
         rvCollectionList.setAdapter(adapter);
+        rvCollectionList.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),
+                rvCollectionList, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Collection collection = collectionList.get(position);
+                transition(view, collection);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
 
         if (savedInstanceState != null) {
             collectionList = savedInstanceState.getParcelableArrayList(KEY_COLLECTIONS);
@@ -81,6 +97,12 @@ public class CollectionListFragment extends Fragment {
         } else {
             getCollections();
         }
+    }
+
+    private void transition(View view, Collection collection) {
+        Intent intent = new Intent(getContext(), CollectionActivity.class);
+        intent.putExtra(Collection.class.getSimpleName(), collection);
+        startActivity(intent);
     }
 
     private void display() {

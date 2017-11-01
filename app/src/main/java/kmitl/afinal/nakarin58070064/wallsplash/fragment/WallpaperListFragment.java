@@ -32,6 +32,7 @@ import retrofit2.Response;
 public class WallpaperListFragment extends Fragment {
 
     private static final String KEY_PHOTO_LIST = "PHOTO_LIST";
+    private static final String KEY_COLLECTION_ID = "COLLECTION_ID";
 
     private RecyclerView rvWallpaperList;
     private TextView tvError;
@@ -40,8 +41,18 @@ public class WallpaperListFragment extends Fragment {
     private UnsplashAPI api;
     private List<Photo> photoList;
 
+    private String collectionId;
+
     public static WallpaperListFragment newInstance() {
         WallpaperListFragment fragment = new WallpaperListFragment();
+        return fragment;
+    }
+
+    public static WallpaperListFragment newInstance(String collectionId) {
+        Bundle args = new Bundle();
+        args.putString(KEY_COLLECTION_ID, collectionId);
+        WallpaperListFragment fragment = new WallpaperListFragment();
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -49,6 +60,10 @@ public class WallpaperListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         api = ApiManager.getInstance().getUnsplashApi(getContext().getString(R.string.application_id));
+
+        if (getArguments() != null) {
+            collectionId = getArguments().getString(KEY_COLLECTION_ID);
+        }
     }
 
     @Override
@@ -116,7 +131,14 @@ public class WallpaperListFragment extends Fragment {
     }
 
     private void getPhotos() {
-        Call<List<Photo>> call = api.getPhotos(null, null, null);
+        Call<List<Photo>> call;
+
+        if (collectionId != null) {
+            call = api.getCollectionPhotos(collectionId, null, null);
+        } else {
+            call = api.getPhotos(null, null, null);
+        }
+
         call.enqueue(new Callback<List<Photo>>() {
             @Override
             public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
