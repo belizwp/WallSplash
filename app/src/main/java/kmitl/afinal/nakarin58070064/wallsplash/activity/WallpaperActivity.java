@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Transition;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 import de.hdodenhof.circleimageview.CircleImageView;
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
+import kmitl.afinal.nakarin58070064.wallsplash.util.ScreenUtils;
 import kmitl.afinal.nakarin58070064.wallsplash.util.WallpaperDownloader;
 
 public class WallpaperActivity extends AppCompatActivity implements View.OnClickListener {
@@ -75,7 +77,8 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
 
         Glide.with(WallpaperActivity.this)
                 .load(photo.getUrls().getRegular())
-                .apply(RequestOptions.noTransformation())
+                .apply(RequestOptions.overrideOf(getResources().getInteger(R.integer.max_image_size)))
+                .apply(RequestOptions.fitCenterTransform())
                 .into(photoView);
 
         Glide.with(WallpaperActivity.this)
