@@ -5,6 +5,7 @@ import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -21,7 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.IOException;
@@ -75,11 +78,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
             photo = savedInstanceState.getParcelable(Photo.class.getSimpleName());
         }
 
-        Glide.with(WallpaperActivity.this)
-                .load(photo.getUrls().getRegular())
-                .apply(RequestOptions.overrideOf(getResources().getInteger(R.integer.max_image_size)))
-                .apply(RequestOptions.fitCenterTransform())
-                .into(photoView);
+        applyLowQualityImage();
 
         Glide.with(WallpaperActivity.this)
                 .load(photo.getUser().getProfileImage().getMedium())
@@ -88,6 +87,31 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
         tvName.setText(photo.getUser().getName());
 
         btnOption.setOnClickListener(this);
+    }
+
+    private void applyLowQualityImage() {
+        Glide.with(WallpaperActivity.this)
+                .load(photo.getUrls().getSmall())
+                .apply(RequestOptions.overrideOf(getResources().getInteger(R.integer.max_image_size)))
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, com.bumptech.glide.request.transition.Transition<? super Drawable> transition) {
+                        photoView.setImageDrawable(resource);
+                        applyHighQualityImage();
+                    }
+                });
+    }
+
+    private void applyHighQualityImage() {
+        Glide.with(WallpaperActivity.this)
+                .load(photo.getUrls().getRegular())
+                .apply(RequestOptions.overrideOf(getResources().getInteger(R.integer.max_image_size)))
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, com.bumptech.glide.request.transition.Transition<? super Drawable> transition) {
+                        photoView.setImageDrawable(resource);
+                    }
+                });
     }
 
     private void initBottomDialog() {
