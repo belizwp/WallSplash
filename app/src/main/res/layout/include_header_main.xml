@@ -5,6 +5,14 @@
     android:paddingBottom="16dp"
     android:paddingTop="8dp">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvMyWall"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingLeft="150dp"
+        android:paddingRight="16dp" />
+
     <FrameLayout
         android:id="@+id/headerMenuWrapper"
         android:layout_width="wrap_content"
@@ -29,13 +37,5 @@
             android:textStyle="bold" />
 
     </FrameLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvMyWall"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingLeft="150dp"
-        android:paddingRight="16dp" />
 
 </FrameLayout>

@@ -16,4 +16,5 @@
     <string name="action_share">Share via</string>
     <string name="total_photos">%d Photos</string>
     <string name="a_collection_by_user_name">A Collection by %s</string>
+    <string name="create_collection">Create collection</string>
 </resources>

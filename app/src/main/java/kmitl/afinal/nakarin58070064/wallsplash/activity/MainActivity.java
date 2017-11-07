@@ -1,5 +1,6 @@
 package kmitl.afinal.nakarin58070064.wallsplash.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -74,6 +75,14 @@ public class MainActivity extends AppCompatActivity {
         rvMyWall.setLayoutManager(layoutManager);
         rvMyWall.addItemDecoration(itemDecoration);
         rvMyWall.setAdapter(adapter);
+
+        tvViewAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MyWallActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void defineDesign() {
@@ -155,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             toolbar.setOverflowIcon(drawable);
         }
 
-        Menu mm = toolbar.getMenu();
+        final Menu mm = toolbar.getMenu();
         for (int i = 0; i < mm.size(); i++) {
             Drawable icon = mm.getItem(i).getIcon();
             if (icon != null) {
