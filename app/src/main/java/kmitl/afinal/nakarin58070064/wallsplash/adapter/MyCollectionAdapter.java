@@ -58,6 +58,10 @@ public class MyCollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    public List<MyCollection> getMyCollectionList() {
+        return myCollectionList;
+    }
+
     public void setMyCollectionList(List myCollectionList) {
         this.myCollectionList = myCollectionList;
     }

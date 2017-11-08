@@ -1,6 +1,7 @@
 package kmitl.afinal.nakarin58070064.wallsplash.fragment;
 
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,9 +9,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.List;
@@ -33,6 +36,11 @@ public class MyCollectionFragment extends Fragment {
     private RecyclerView rvMyCollection;
     private MyCollectionAdapter adapter;
 
+    private MyCollectionFragmentListener listener;
+
+    private final int EDIT = 0;
+    private final int DELETE = 1;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +61,23 @@ public class MyCollectionFragment extends Fragment {
         loadData();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MyCollectionFragmentListener) {
+            listener = (MyCollectionFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement MyCollectionFragmentListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
     private void initInstances(View rootView, Bundle savedInstanceState) {
         initDB();
 
@@ -69,10 +94,9 @@ public class MyCollectionFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         int type = adapter.getItemViewType(position);
                         if (type == MyCollectionAdapter.ViewType.ITEM_CREATE) {
-                            add();
+                            showCreateDialog(null, -1);
                         } else if (type == MyCollectionAdapter.ViewType.ITEM_COLLECTION) {
-                            // TODO: start CollectionActivity
-                            showToast("Click Collection");
+                            listener.onCollectionClick(adapter.getMyCollection(position));
                         }
                     }
 
@@ -80,7 +104,7 @@ public class MyCollectionFragment extends Fragment {
                     public void onLongItemClick(View view, int position) {
                         int type = adapter.getItemViewType(position);
                         if (type == MyCollectionAdapter.ViewType.ITEM_COLLECTION) {
-                            showDialog(adapter.getMyCollection(position));
+                            showDialog(adapter.getMyCollection(position), position);
                         }
                     }
                 }));
@@ -102,49 +126,48 @@ public class MyCollectionFragment extends Fragment {
         }).execute();
     }
 
-    private void add() {
-        final MyCollection myCollection = new MyCollection();
-        myCollection.setTitle("Test Add");
-
+    private void add(final MyCollection myCollection) {
         new AddCollectionTask(database, new AddCollectionTask.OnPostAddListener() {
             @Override
             public void onPostAdd() {
-                loadData();
+                adapter.getMyCollectionList().add(myCollection);
+                adapter.notifyItemInserted(adapter.getItemCount());
             }
         }).execute(myCollection);
     }
 
-    private void edit(MyCollection myCollection) {
-        myCollection.setTitle("Test Edited");
-
+    private void edit(final MyCollection edited, final int position) {
         new UpdateCollectionTask(database, new UpdateCollectionTask.OnPostUpdateListener() {
             @Override
             public void onPostUpdate() {
-                loadData();
+                int listIndex = position - 1;
+                adapter.getMyCollectionList().set(listIndex, edited);
+                adapter.notifyItemChanged(position);
             }
-        }).execute(myCollection);
+        }).execute(edited);
     }
 
-    private void delete(MyCollection myCollection) {
+    private void delete(final MyCollection myCollection, final int position) {
         new DeleteCollectionTask(database, new DeleteCollectionTask.OnPostDeleteListener() {
             @Override
             public void onPostDelete() {
-                loadData();
+                adapter.getMyCollectionList().remove(myCollection);
+                adapter.notifyItemRemoved(position);
             }
         }).execute(myCollection);
     }
 
-    private void showDialog(final MyCollection myCollection) {
+    private void showDialog(final MyCollection myCollection, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setItems(R.array.my_collection_option, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 switch (which) {
-                    case 0:
-                        edit(myCollection);
+                    case EDIT:
+                        showCreateDialog(myCollection, position);
                         break;
-                    case 1:
-                        delete(myCollection);
+                    case DELETE:
+                        delete(myCollection, position);
                         break;
                     default:
                         dialogInterface.dismiss();
@@ -154,8 +177,45 @@ public class MyCollectionFragment extends Fragment {
         builder.create().show();
     }
 
+    private void showCreateDialog(final MyCollection myCollection, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Collection's Title");
+
+        final EditText input = new EditText(getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        if (myCollection != null) {
+            input.setText(myCollection.getTitle());
+
+            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    myCollection.setTitle(input.getText().toString());
+                    edit(myCollection, position);
+                }
+            });
+        } else {
+            builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    MyCollection newCollection = new MyCollection();
+                    newCollection.setTitle(input.getText().toString());
+                    add(newCollection);
+                }
+            });
+        }
+
+        builder.setNegativeButton("Cancel", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void showToast(String text) {
         Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 
+    public interface MyCollectionFragmentListener {
+        void onCollectionClick(MyCollection collection);
+    }
 }

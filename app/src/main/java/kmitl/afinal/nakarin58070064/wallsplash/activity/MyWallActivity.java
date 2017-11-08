@@ -4,11 +4,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.fragment.MyCollectionFragment;
+import kmitl.afinal.nakarin58070064.wallsplash.model.MyCollection;
 
-public class MyWallActivity extends AppCompatActivity {
+public class MyWallActivity extends AppCompatActivity implements MyCollectionFragment.MyCollectionFragmentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,5 +41,10 @@ public class MyWallActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCollectionClick(MyCollection collection) {
+        Toast.makeText(this, collection.getTitle(), Toast.LENGTH_SHORT).show();
     }
 }
