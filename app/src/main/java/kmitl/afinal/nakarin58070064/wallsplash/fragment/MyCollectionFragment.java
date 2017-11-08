@@ -111,7 +111,8 @@ public class MyCollectionFragment extends Fragment {
     }
 
     private void initDB() {
-        database = Room.databaseBuilder(getContext(), WallSplashDatabase.class, "DB")
+        database = Room.databaseBuilder(getContext(), WallSplashDatabase.class,
+                getString(R.string.db_name))
                 .fallbackToDestructiveMigration()
                 .build();
     }

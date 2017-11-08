@@ -68,6 +68,10 @@ public class User implements Parcelable {
         links = in.readParcelable(Links.class.getClassLoader());
     }
 
+    public User() {
+        this.profileImage = new ProfileImage();
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);

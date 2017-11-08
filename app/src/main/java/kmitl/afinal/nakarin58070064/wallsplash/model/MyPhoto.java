@@ -4,12 +4,14 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 @Entity(foreignKeys = @ForeignKey(entity = MyCollection.class,
         parentColumns = "id",
         childColumns = "current_collection"))
-public class MyPhoto {
+public class MyPhoto implements Parcelable {
 
     @PrimaryKey
     @NonNull
@@ -20,6 +22,7 @@ public class MyPhoto {
 
     private String userId;
     private String userName;
+    private String userImage;
 
     private String imageSmall;
     private String imageRegular;
@@ -36,9 +39,50 @@ public class MyPhoto {
         this.id = photo.getId();
         this.userId = photo.getUser().getId();
         this.userName = photo.getUser().getName();
+        this.userImage = photo.getUser().getProfileImage().getMedium();
         this.imageSmall = photo.getUrls().getSmall();
         this.imageRegular = photo.getUrls().getRegular();
         this.imageFull = photo.getUrls().getFull();
+    }
+
+    protected MyPhoto(Parcel in) {
+        id = in.readString();
+        currentCollection = in.readInt();
+        userId = in.readString();
+        userName = in.readString();
+        userImage = in.readString();
+        imageSmall = in.readString();
+        imageRegular = in.readString();
+        imageFull = in.readString();
+        linkHtml = in.readString();
+        linkDownload = in.readString();
+    }
+
+    public static final Creator<MyPhoto> CREATOR = new Creator<MyPhoto>() {
+        @Override
+        public MyPhoto createFromParcel(Parcel in) {
+            return new MyPhoto(in);
+        }
+
+        @Override
+        public MyPhoto[] newArray(int size) {
+            return new MyPhoto[size];
+        }
+    };
+
+    public Photo getPhoto() {
+        Photo photo = new Photo();
+        photo.setId(id);
+        photo.getUser().setId(userId);
+        photo.getUser().setName(userName);
+        photo.getUser().getProfileImage().setMedium(userImage);
+        photo.getUrls().setSmall(imageSmall);
+        photo.getUrls().setRegular(imageRegular);
+        photo.getUrls().setFull(imageFull);
+        photo.getLinks().setHtml(linkHtml);
+        photo.getLinks().setDownload(linkDownload);
+
+        return photo;
     }
 
     public String getId() {
@@ -111,5 +155,32 @@ public class MyPhoto {
 
     public void setLinkDownload(String linkDownload) {
         this.linkDownload = linkDownload;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeInt(currentCollection);
+        dest.writeString(userId);
+        dest.writeString(userName);
+        dest.writeString(userImage);
+        dest.writeString(imageSmall);
+        dest.writeString(imageRegular);
+        dest.writeString(imageFull);
+        dest.writeString(linkHtml);
+        dest.writeString(linkDownload);
     }
 }

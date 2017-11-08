@@ -17,6 +17,7 @@
     <string name="total_photos">%d Photos</string>
     <string name="a_collection_by_user_name">A Collection by %s</string>
     <string name="create_collection">Create collection</string>
+    <string name="db_name">wallsplash-database</string>
 
     <string-array name="my_collection_option">
         <item>Edit</item>

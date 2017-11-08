@@ -24,6 +24,10 @@ public class ProfileImage implements Parcelable {
         large = in.readString();
     }
 
+    public ProfileImage() {
+
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(small);

@@ -21,6 +21,7 @@ import kmitl.afinal.nakarin58070064.wallsplash.activity.WallpaperActivity;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.WallpaperListAdapter;
 import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
+import kmitl.afinal.nakarin58070064.wallsplash.model.MyPhoto;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
 import kmitl.afinal.nakarin58070064.wallsplash.network.ApiManager;
 import kmitl.afinal.nakarin58070064.wallsplash.network.UnsplashAPI;
@@ -33,6 +34,8 @@ public class WallpaperListFragment extends Fragment {
 
     private static final String KEY_PHOTO_LIST = "PHOTO_LIST";
     private static final String KEY_COLLECTION_ID = "COLLECTION_ID";
+    private static final String KEY_MY_PHOTO_LIST = "MY_PHOTO_LIST";
+    private static final String KEY_IS_MY_PHOTO_LIST = "IS_MY_PHOTO_LIST";
 
     private RecyclerView rvWallpaperList;
     private TextView tvError;
@@ -42,6 +45,8 @@ public class WallpaperListFragment extends Fragment {
     private List<Photo> photoList;
 
     private String collectionId;
+
+    private boolean isMyPhotoList;
 
     public static WallpaperListFragment newInstance() {
         WallpaperListFragment fragment = new WallpaperListFragment();
@@ -56,6 +61,15 @@ public class WallpaperListFragment extends Fragment {
         return fragment;
     }
 
+    public static WallpaperListFragment newInstance(List<MyPhoto> myPhotoList) {
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(KEY_MY_PHOTO_LIST, (ArrayList<? extends Parcelable>) myPhotoList);
+        args.putBoolean(KEY_IS_MY_PHOTO_LIST, true);
+        WallpaperListFragment fragment = new WallpaperListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +77,11 @@ public class WallpaperListFragment extends Fragment {
 
         if (getArguments() != null) {
             collectionId = getArguments().getString(KEY_COLLECTION_ID);
+            if (getArguments().getParcelableArrayList(KEY_MY_PHOTO_LIST) != null) {
+                List<MyPhoto> myPhotoList = getArguments().getParcelableArrayList(KEY_MY_PHOTO_LIST);
+                photoList = convertMyPhotoToPhoto(myPhotoList);
+                isMyPhotoList = getArguments().getBoolean(KEY_IS_MY_PHOTO_LIST);
+            }
         }
     }
 
@@ -103,17 +122,22 @@ public class WallpaperListFragment extends Fragment {
             }
         }));
 
-        if (savedInstanceState != null) {
-            photoList = savedInstanceState.getParcelableArrayList(KEY_PHOTO_LIST);
-            display();
+        if (photoList == null) {
+            if (savedInstanceState != null) {
+                photoList = savedInstanceState.getParcelableArrayList(KEY_PHOTO_LIST);
+                display();
+            } else {
+                getPhotos();
+            }
         } else {
-            getPhotos();
+            display();
         }
     }
 
     private void transition(View view, Photo photo) {
         Intent intent = new Intent(getContext(), WallpaperActivity.class);
         intent.putExtra(Photo.class.getSimpleName(), photo);
+        intent.putExtra(KEY_IS_MY_PHOTO_LIST, isMyPhotoList);
 
         if (Build.VERSION.SDK_INT < 21) {
             startActivity(intent);
@@ -153,5 +177,15 @@ public class WallpaperListFragment extends Fragment {
 
             }
         });
+    }
+
+    private List<Photo> convertMyPhotoToPhoto(List<MyPhoto> myPhotoList) {
+        List<Photo> newPhotoList = new ArrayList<>();
+
+        for (int i = 0; i < myPhotoList.size(); i++) {
+            newPhotoList.add(myPhotoList.get(i).getPhoto());
+        }
+
+        return newPhotoList;
     }
 }

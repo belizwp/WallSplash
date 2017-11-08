@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         tvViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MyWallActivity.class);
+                Intent intent = new Intent(MainActivity.this, MyCollActivity.class);
                 startActivity(intent);
             }
         });

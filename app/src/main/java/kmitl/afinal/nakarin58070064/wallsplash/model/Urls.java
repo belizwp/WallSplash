@@ -32,6 +32,10 @@ public class Urls implements Parcelable {
         thumb = in.readString();
     }
 
+    public Urls() {
+
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(raw);

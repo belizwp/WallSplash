@@ -38,6 +38,8 @@ import kmitl.afinal.nakarin58070064.wallsplash.util.WallpaperDownloader;
 
 public class WallpaperActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String KEY_IS_MY_PHOTO_LIST = "IS_MY_PHOTO_LIST";
+
     private Photo photo;
 
     private PhotoView photoView;
@@ -48,6 +50,8 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
     private BottomSheetDialog bottomSheetDialog;
 
     private final int REQUST_DOWNLOAD = 0;
+
+    private boolean isMyPhotoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,14 +73,15 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
         tvName = findViewById(R.id.tvName);
         btnOption = findViewById(R.id.btnOption);
 
-        initBottomDialog();
-
         Intent intent = getIntent();
         photo = intent.getParcelableExtra(Photo.class.getSimpleName());
+        isMyPhotoList = intent.getBooleanExtra(KEY_IS_MY_PHOTO_LIST, true);
 
         if (photo == null && savedInstanceState != null) {
             photo = savedInstanceState.getParcelable(Photo.class.getSimpleName());
         }
+
+        initBottomDialog();
 
         applyLowQualityImage();
 
@@ -130,6 +135,10 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
         actDownload.setOnClickListener(this);
         actShare.setOnClickListener(this);
         actUnsplash.setOnClickListener(this);
+
+        if (isMyPhotoList) {
+            actAddToCollection.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -181,6 +190,9 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
 
     private void addToCollection() {
         showToast("add to collection");
+        Intent intent = new Intent(WallpaperActivity.this, AddToCollectionActivity.class);
+        intent.putExtra(Photo.class.getSimpleName(), photo);
+        startActivity(intent);
     }
 
     private void download() {

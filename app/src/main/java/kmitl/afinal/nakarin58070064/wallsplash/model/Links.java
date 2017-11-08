@@ -40,6 +40,10 @@ public class Links implements Parcelable {
         download_location = in.readString();
     }
 
+    public Links() {
+
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(self);

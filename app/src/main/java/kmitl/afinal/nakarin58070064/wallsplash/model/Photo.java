@@ -96,6 +96,12 @@ public class Photo implements Parcelable {
         user = in.readParcelable(User.class.getClassLoader());
     }
 
+    public Photo() {
+        this.user = new User();
+        this.urls = new Urls();
+        this.links = new Links();
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
