@@ -18,6 +18,10 @@
     <string name="a_collection_by_user_name">A Collection by %s</string>
     <string name="create_collection">Create collection</string>
     <string name="db_name">wallsplash-database</string>
+    <string name="title_of_collection">Collection\'s Title</string>
+    <string name="save">Save</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="my_collection_option">
         <item>Edit</item>

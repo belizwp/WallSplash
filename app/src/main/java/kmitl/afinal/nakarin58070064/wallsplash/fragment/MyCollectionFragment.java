@@ -12,6 +12,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -177,8 +178,8 @@ public class MyCollectionFragment extends Fragment {
     }
 
     private void showCreateDialog(final MyCollection myCollection, final int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Collection's Title");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
+        builder.setTitle(R.string.title_of_collection);
 
         final EditText input = new EditText(getContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -187,7 +188,7 @@ public class MyCollectionFragment extends Fragment {
         if (myCollection != null) {
             input.setText(myCollection.getTitle());
 
-            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     myCollection.setTitle(input.getText().toString());
@@ -195,7 +196,7 @@ public class MyCollectionFragment extends Fragment {
                 }
             });
         } else {
-            builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     MyCollection newCollection = new MyCollection();
@@ -205,8 +206,9 @@ public class MyCollectionFragment extends Fragment {
             });
         }
 
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
     }
 

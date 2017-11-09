@@ -10,4 +10,8 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
+    <style name="AlertDialogTheme" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
 </resources>
