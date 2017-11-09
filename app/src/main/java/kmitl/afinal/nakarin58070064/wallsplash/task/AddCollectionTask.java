@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import kmitl.afinal.nakarin58070064.wallsplash.database.WallSplashDatabase;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyCollection;
 
-public class AddCollectionTask extends AsyncTask<MyCollection, Void, Void> {
+public class AddCollectionTask extends AsyncTask<MyCollection, Void, Long> {
 
     private WallSplashDatabase db;
     private OnPostAddListener listener;
@@ -16,20 +16,17 @@ public class AddCollectionTask extends AsyncTask<MyCollection, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(MyCollection... myCollections) {
-        for (int i = 0; i < myCollections.length; i++) {
-            db.myCollectionDao().insert(myCollections[i]);
-        }
-        return null;
+    protected Long doInBackground(MyCollection... myCollections) {
+        return db.myCollectionDao().insert(myCollections[0]);
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        listener.onPostAdd();
+    protected void onPostExecute(Long along) {
+        super.onPostExecute(along);
+        listener.onPostAdd(along);
     }
 
     public interface OnPostAddListener {
-        void onPostAdd();
+        void onPostAdd(long id);
     }
 }

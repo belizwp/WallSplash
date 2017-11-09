@@ -11,9 +11,12 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
 @Entity(foreignKeys = @ForeignKey(entity = MyCollection.class,
         parentColumns = "id",
-        childColumns = "current_collection"))
+        childColumns = "current_collection",
+        onDelete = CASCADE))
 public class MyPhoto implements Parcelable {
 
     @PrimaryKey

@@ -127,7 +127,8 @@ public class MyCollectionFragment extends Fragment {
     private void add(final MyCollection myCollection) {
         new AddCollectionTask(database, new AddCollectionTask.OnPostAddListener() {
             @Override
-            public void onPostAdd() {
+            public void onPostAdd(long id) {
+                myCollection.setId((int) id);
                 adapter.getMyCollectionList().add(myCollection);
                 adapter.notifyItemInserted(adapter.getItemCount());
             }

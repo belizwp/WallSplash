@@ -17,7 +17,7 @@ public interface MyCollectionDao {
     List<MyCollection> getAll();
 
     @Insert
-    void insert(MyCollection myCollection);
+    long insert(MyCollection myCollection);
 
     @Update
     void update(MyCollection myCollection);
