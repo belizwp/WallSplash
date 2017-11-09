@@ -6,6 +6,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import java.util.Date;
+
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.database.DatabaseManager;
 import kmitl.afinal.nakarin58070064.wallsplash.database.WallSplashDatabase;
@@ -65,6 +67,7 @@ public class AddToCollectionActivity extends AppCompatActivity implements
             MyPhoto myPhoto = new MyPhoto(photo);
             Log.d("AddToCollection", myPhoto.getUserId());
             myPhoto.setCurrentCollection(collection.getId());
+            myPhoto.setTimeCreate(new Date());
 
             new AddToCollectionTask(database, new AddToCollectionTask.OnPostAddListener() {
                 @Override

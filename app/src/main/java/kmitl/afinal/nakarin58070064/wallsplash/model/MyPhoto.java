@@ -4,9 +4,12 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+
+import java.util.Date;
 
 @Entity(foreignKeys = @ForeignKey(entity = MyCollection.class,
         parentColumns = "id",
@@ -30,6 +33,10 @@ public class MyPhoto implements Parcelable {
 
     private String linkHtml;
     private String linkDownload;
+
+    @ColumnInfo(name = "time_create")
+    @TypeConverters({DateConverter.class})
+    private Date timeCreate;
 
     public MyPhoto() {
 
@@ -56,6 +63,25 @@ public class MyPhoto implements Parcelable {
         imageFull = in.readString();
         linkHtml = in.readString();
         linkDownload = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeInt(currentCollection);
+        dest.writeString(userId);
+        dest.writeString(userName);
+        dest.writeString(userImage);
+        dest.writeString(imageSmall);
+        dest.writeString(imageRegular);
+        dest.writeString(imageFull);
+        dest.writeString(linkHtml);
+        dest.writeString(linkDownload);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<MyPhoto> CREATOR = new Creator<MyPhoto>() {
@@ -165,22 +191,11 @@ public class MyPhoto implements Parcelable {
         this.userImage = userImage;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public Date getTimeCreate() {
+        return timeCreate;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeInt(currentCollection);
-        dest.writeString(userId);
-        dest.writeString(userName);
-        dest.writeString(userImage);
-        dest.writeString(imageSmall);
-        dest.writeString(imageRegular);
-        dest.writeString(imageFull);
-        dest.writeString(linkHtml);
-        dest.writeString(linkDownload);
+    public void setTimeCreate(Date timeCreate) {
+        this.timeCreate = timeCreate;
     }
 }

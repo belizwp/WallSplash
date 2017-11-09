@@ -20,10 +20,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import jp.wasabeef.blurry.Blurry;
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.MyWallAdapter;
+import kmitl.afinal.nakarin58070064.wallsplash.database.DatabaseManager;
 import kmitl.afinal.nakarin58070064.wallsplash.fragment.ShowcaseFragment;
+import kmitl.afinal.nakarin58070064.wallsplash.model.MyPhoto;
+import kmitl.afinal.nakarin58070064.wallsplash.task.LoadLastPhotoTask;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ImageUtils;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ScreenUtils;
 
@@ -53,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadLastAddWallpaper();
+    }
+
     private void initInstances() {
         toolbar = findViewById(R.id.toolBar);
         appBarLayout = findViewById(R.id.appBar);
@@ -70,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 this, DividerItemDecoration.HORIZONTAL);
         itemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_space_horizontal));
 
-        adapter = new MyWallAdapter();
+        adapter = new MyWallAdapter(this);
 
         rvMyWall.setLayoutManager(layoutManager);
         rvMyWall.addItemDecoration(itemDecoration);
@@ -83,6 +94,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void loadLastAddWallpaper() {
+        int limit = 10;
+        new LoadLastPhotoTask(DatabaseManager.getInstance().getDatabase(), new LoadLastPhotoTask.OnPostLoadListener() {
+            @Override
+            public void onPostLoad(List<MyPhoto> myPhotoList) {
+                adapter.setMyPhotoList(myPhotoList);
+                adapter.notifyDataSetChanged();
+            }
+        }).execute(limit);
     }
 
     private void defineDesign() {

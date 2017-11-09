@@ -17,4 +17,7 @@ public interface MyPhotoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addToCollection(MyPhoto myPhoto);
+
+    @Query("SELECT * FROM MyPhoto ORDER BY time_create DESC LIMIT :limit")
+    List<MyPhoto> getLast(int limit);
 }
