@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,9 +26,11 @@ import java.util.List;
 import jp.wasabeef.blurry.Blurry;
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.MyWallAdapter;
+import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
 import kmitl.afinal.nakarin58070064.wallsplash.database.DatabaseManager;
 import kmitl.afinal.nakarin58070064.wallsplash.fragment.ShowcaseFragment;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyPhoto;
+import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
 import kmitl.afinal.nakarin58070064.wallsplash.task.LoadLastPhotoTask;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ImageUtils;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ScreenUtils;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvMyWall;
     private TextView tvViewAll;
     private MyWallAdapter adapter;
+
+    private static final String KEY_IS_MY_PHOTO_LIST = "IS_MY_PHOTO_LIST";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        /*
+            update header image bg
+         */
+        Blurry.with(this)
+                .color(Color.argb(100, 0, 0, 0))
+                .radius(2).sampling(32)
+                .async()
+                .from(ImageUtils.drawableToBitmap(ScreenUtils.getCurrentWallpaper(this)))
+                .into(imageHeader);
+
         loadLastAddWallpaper();
     }
 
@@ -94,6 +109,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        rvMyWall.addOnItemTouchListener(new RecyclerItemClickListener(this, rvMyWall,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Photo photo = adapter.getMyPhotoList().get(position).getPhoto();
+                        transition(view, photo);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                }));
     }
 
     private void loadLastAddWallpaper() {
@@ -107,17 +136,22 @@ public class MainActivity extends AppCompatActivity {
         }).execute(limit);
     }
 
-    private void defineDesign() {
-        /*
-            update header image bg
-         */
-        Blurry.with(this)
-                .color(Color.argb(100, 0, 0, 0))
-                .radius(2).sampling(32)
-                .async()
-                .from(ImageUtils.drawableToBitmap(ScreenUtils.getCurrentWallpaper(this)))
-                .into(imageHeader);
+    private void transition(View view, Photo photo) {
+        Intent intent = new Intent(this, WallpaperActivity.class);
+        intent.putExtra(Photo.class.getSimpleName(), photo);
+        intent.putExtra(KEY_IS_MY_PHOTO_LIST, true);
 
+        if (Build.VERSION.SDK_INT < 21) {
+            startActivity(intent);
+        } else {
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(this, view,
+                            getString(R.string.transition_photo));
+            startActivity(intent, options.toBundle());
+        }
+    }
+
+    private void defineDesign() {
         /*
             header content position
          */
