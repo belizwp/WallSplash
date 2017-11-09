@@ -1,6 +1,5 @@
 package kmitl.afinal.nakarin58070064.wallsplash.fragment;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import java.util.List;
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.MyCollectionAdapter;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
+import kmitl.afinal.nakarin58070064.wallsplash.database.DatabaseManager;
 import kmitl.afinal.nakarin58070064.wallsplash.database.WallSplashDatabase;
 import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyCollection;
@@ -111,10 +111,7 @@ public class MyCollectionFragment extends Fragment {
     }
 
     private void initDB() {
-        database = Room.databaseBuilder(getContext(), WallSplashDatabase.class,
-                getString(R.string.db_name))
-                .fallbackToDestructiveMigration()
-                .build();
+        database = DatabaseManager.getInstance().getDatabase();
     }
 
     private void loadData() {

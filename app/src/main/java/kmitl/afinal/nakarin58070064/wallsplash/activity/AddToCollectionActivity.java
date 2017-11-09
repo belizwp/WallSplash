@@ -1,6 +1,5 @@
 package kmitl.afinal.nakarin58070064.wallsplash.activity;
 
-import android.arch.persistence.room.Room;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
+import kmitl.afinal.nakarin58070064.wallsplash.database.DatabaseManager;
 import kmitl.afinal.nakarin58070064.wallsplash.database.WallSplashDatabase;
 import kmitl.afinal.nakarin58070064.wallsplash.fragment.MyCollectionFragment;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyCollection;
@@ -44,10 +44,7 @@ public class AddToCollectionActivity extends AppCompatActivity implements
     }
 
     private void initDB() {
-        database = Room.databaseBuilder(getApplicationContext(), WallSplashDatabase.class,
-                getString(R.string.db_name))
-                .fallbackToDestructiveMigration()
-                .build();
+        database = DatabaseManager.getInstance().getDatabase();
     }
 
     @Override
