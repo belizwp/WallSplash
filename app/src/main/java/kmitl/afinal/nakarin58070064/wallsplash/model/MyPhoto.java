@@ -53,6 +53,8 @@ public class MyPhoto implements Parcelable {
         this.imageSmall = photo.getUrls().getSmall();
         this.imageRegular = photo.getUrls().getRegular();
         this.imageFull = photo.getUrls().getFull();
+        this.linkHtml = photo.getLinks().getHtml();
+        this.linkDownload = photo.getLinks().getDownload();
     }
 
     protected MyPhoto(Parcel in) {

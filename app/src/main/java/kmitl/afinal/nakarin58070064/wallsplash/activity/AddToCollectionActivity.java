@@ -34,7 +34,7 @@ public class AddToCollectionActivity extends AppCompatActivity implements
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Add to Collection");
+        setTitle(getString(R.string.add_to_collection));
 
         initDB();
 
@@ -65,7 +65,6 @@ public class AddToCollectionActivity extends AppCompatActivity implements
 
         if (photo != null) {
             MyPhoto myPhoto = new MyPhoto(photo);
-            Log.d("AddToCollection", myPhoto.getUserId());
             myPhoto.setCurrentCollection(collection.getId());
             myPhoto.setTimeCreate(new Date());
 
