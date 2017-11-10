@@ -2,6 +2,7 @@ package kmitl.afinal.nakarin58070064.wallsplash.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -132,6 +132,7 @@ public class MyCollectionFragment extends Fragment {
                 myCollection.setId((int) id);
                 adapter.getMyCollectionList().add(myCollection);
                 adapter.notifyItemInserted(adapter.getItemCount());
+                rvMyCollection.smoothScrollToPosition(adapter.getItemCount());
             }
         }).execute(myCollection);
     }
@@ -178,7 +179,13 @@ public class MyCollectionFragment extends Fragment {
     }
 
     private void showCreateDialog(final MyCollection myCollection, final int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
+        } else {
+            builder = new AlertDialog.Builder(getActivity());
+        }
+
         builder.setTitle(R.string.title_of_collection);
 
         final EditText input = new EditText(getContext());
@@ -210,10 +217,6 @@ public class MyCollectionFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
-    }
-
-    private void showToast(String text) {
-        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     public interface MyCollectionFragmentListener {
