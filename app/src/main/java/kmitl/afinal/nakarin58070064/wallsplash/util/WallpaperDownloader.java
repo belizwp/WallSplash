@@ -6,9 +6,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 
+import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
 
 public class WallpaperDownloader {
@@ -26,7 +28,7 @@ public class WallpaperDownloader {
     }
 
     public void start() {
-        String fileName = photo.getId() + ".jpg";
+        String fileName = photo.getId() + ".jpeg";
         File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File target = new File(directory, fileName);
         if (!directory.exists()) {
@@ -36,11 +38,11 @@ public class WallpaperDownloader {
             }
         }
 
-        String url = photo.getLinks().getDownload();
+        String url = photo.getUrls().getFull();
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setMimeType("image/*");
-        request.setTitle(photo.getId());
-        request.setDescription("Taken by " + photo.getUser().getName());
+        request.setMimeType("image/jpeg");
+        request.setTitle(context.getString(R.string.name_download_file, photo.getId()));
+        request.setDescription(context.getString(R.string.a_photo_by, photo.getUser().getName()));
         request.allowScanningByMediaScanner();
         request.setVisibleInDownloadsUi(false);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
@@ -52,8 +54,10 @@ public class WallpaperDownloader {
             downloadManager.enqueue(request);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
+            return;
         }
 
+        Toast.makeText(context, R.string.download_started, Toast.LENGTH_SHORT).show();
     }
 
     public static WallpaperDownloader prepare(@NonNull Context context) {

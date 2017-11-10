@@ -27,6 +27,10 @@
     <string name="cache_wallpaper_file_name">wallpaperCache.jpeg</string>
     <string name="fileprovider_postfix">.fileprovider</string>
     <string name="set_as">Set as</string>
+    <string name="a_photo_by">A photo by %s</string>
+    <string name="name_download_file">WallSplash - %s</string>
+    <string name="download_started">Download started...</string>
+    <string name="need_download_permission">Need permission to download</string>
 
     <string-array name="my_collection_option">
         <item>Edit</item>

@@ -247,7 +247,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     download();
                 } else {
-                    showToast("need perm to download");
+                    showToast(getString(R.string.need_download_permission));
                 }
                 return;
             }
