@@ -22,6 +22,11 @@
     <string name="save">Save</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
+    <string name="utm_params"><![CDATA[\?utm_source=wallsplash&utm_medium=referral&utm_campaign=api-credit]]></string>
+    <string name="unsplash">Unsplash</string>
+    <string name="cache_wallpaper_file_name">wallpaperCache.jpeg</string>
+    <string name="fileprovider_postfix">.fileprovider</string>
+    <string name="set_as">Set as</string>
 
     <string-array name="my_collection_option">
         <item>Edit</item>
