@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
+import kmitl.afinal.nakarin58070064.wallsplash.model.SearchCollectionResults;
 import kmitl.afinal.nakarin58070064.wallsplash.model.SearchResults;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -43,6 +44,9 @@ public interface UnsplashAPI {
 
     @GET("search/photos")
     Call<SearchResults> searchPhotos(@Query("query") String query, @Query("page") Integer page, @Query("per_page") Integer perPage);
+
+    @GET("search/collections")
+    Call<SearchCollectionResults> searchCollections(@Query("query") String query, @Query("page") Integer page, @Query("per_page") Integer perPage);
 
     @GET("collections")
     Call<List<kmitl.afinal.nakarin58070064.wallsplash.model.Collection>> getCollections(@Query("page") Integer page, @Query("per_page") Integer perPage);

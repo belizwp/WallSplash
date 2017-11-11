@@ -23,6 +23,7 @@ import kmitl.afinal.nakarin58070064.wallsplash.adapter.WallpaperListAdapter;
 import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyPhoto;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
+import kmitl.afinal.nakarin58070064.wallsplash.model.SearchResults;
 import kmitl.afinal.nakarin58070064.wallsplash.network.ApiManager;
 import kmitl.afinal.nakarin58070064.wallsplash.network.UnsplashAPI;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ScreenUtils;
@@ -36,6 +37,8 @@ public class WallpaperListFragment extends Fragment {
     private static final String KEY_COLLECTION_ID = "COLLECTION_ID";
     private static final String KEY_MY_PHOTO_LIST = "MY_PHOTO_LIST";
     private static final String KEY_IS_MY_PHOTO_LIST = "IS_MY_PHOTO_LIST";
+    private static final String KEY_IS_WAIT_QUERY = "IS_WAIT_QUERY";
+    private static final String KEY_QUERY = "QUERY";
 
     private RecyclerView rvWallpaperList;
     private TextView tvError;
@@ -48,8 +51,12 @@ public class WallpaperListFragment extends Fragment {
 
     private boolean isMyPhotoList;
 
-    public static WallpaperListFragment newInstance() {
+    private boolean isWaitQuery;
+    private String query;
+
+    public static WallpaperListFragment newInstance(boolean isWaitQuery) {
         WallpaperListFragment fragment = new WallpaperListFragment();
+        fragment.isWaitQuery = isWaitQuery;
         return fragment;
     }
 
@@ -75,6 +82,24 @@ public class WallpaperListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         api = ApiManager.getInstance().getUnsplashApi(getContext().getString(R.string.application_id));
 
+        onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(KEY_PHOTO_LIST, (ArrayList<? extends Parcelable>) photoList);
+        outState.putBoolean(KEY_IS_WAIT_QUERY, isWaitQuery);
+        outState.putString(KEY_QUERY, query);
+    }
+
+    private void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            photoList = savedInstanceState.getParcelableArrayList(KEY_PHOTO_LIST);
+            isWaitQuery = savedInstanceState.getBoolean(KEY_IS_WAIT_QUERY, false);
+            query = savedInstanceState.getString(KEY_QUERY);
+        }
+
         if (getArguments() != null) {
             collectionId = getArguments().getString(KEY_COLLECTION_ID);
             if (getArguments().getParcelableArrayList(KEY_MY_PHOTO_LIST) != null) {
@@ -83,12 +108,11 @@ public class WallpaperListFragment extends Fragment {
                 isMyPhotoList = getArguments().getBoolean(KEY_IS_MY_PHOTO_LIST);
             }
         }
-    }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(KEY_PHOTO_LIST, (ArrayList<? extends Parcelable>) photoList);
+
+        if (isWaitQuery) {
+            photoList = new ArrayList<>();
+        }
     }
 
     @Override
@@ -123,14 +147,9 @@ public class WallpaperListFragment extends Fragment {
         }));
 
         if (photoList == null) {
-            if (savedInstanceState != null) {
-                photoList = savedInstanceState.getParcelableArrayList(KEY_PHOTO_LIST);
-                display();
-            } else {
-                getPhotos();
-            }
+            getPhotos();
         } else {
-            display();
+            display(photoList);
         }
     }
 
@@ -149,9 +168,20 @@ public class WallpaperListFragment extends Fragment {
         }
     }
 
-    private void display() {
-        adapter.setPhotoList(photoList);
-        adapter.notifyDataSetChanged();
+    private void display(List<Photo> photos) {
+        if (photos == null) {
+            tvError.setVisibility(View.VISIBLE);
+            rvWallpaperList.setVisibility(View.GONE);
+        } else if (photos.size() == 0) {
+            tvError.setVisibility(View.VISIBLE);
+            rvWallpaperList.setVisibility(View.GONE);
+            tvError.setText(R.string.not_found_any_result);
+        } else {
+            tvError.setVisibility(View.GONE);
+            rvWallpaperList.setVisibility(View.VISIBLE);
+            adapter.setPhotoList(photos);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void getPhotos() {
@@ -168,13 +198,13 @@ public class WallpaperListFragment extends Fragment {
             public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
                 if (response.isSuccessful()) {
                     photoList = response.body();
-                    display();
+                    display(photoList);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Photo>> call, Throwable t) {
-
+                display(null);
             }
         });
     }
@@ -187,5 +217,25 @@ public class WallpaperListFragment extends Fragment {
         }
 
         return newPhotoList;
+    }
+
+    public void queryWallpaper(String query) {
+        Call<SearchResults> call = api.searchPhotos(query, null, null);
+        call.enqueue(new Callback<SearchResults>() {
+            @Override
+            public void onResponse(Call<SearchResults> call, Response<SearchResults> response) {
+                if (response.isSuccessful()) {
+                    isWaitQuery = false;
+                    SearchResults searchResults = response.body();
+                    photoList = searchResults.getResults();
+                    display(photoList);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchResults> call, Throwable t) {
+                display(null);
+            }
+        });
     }
 }

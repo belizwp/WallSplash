@@ -22,6 +22,7 @@ import kmitl.afinal.nakarin58070064.wallsplash.adapter.CollectionListAdapter;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Collection;
 import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
+import kmitl.afinal.nakarin58070064.wallsplash.model.SearchCollectionResults;
 import kmitl.afinal.nakarin58070064.wallsplash.network.ApiManager;
 import kmitl.afinal.nakarin58070064.wallsplash.network.UnsplashAPI;
 import kmitl.afinal.nakarin58070064.wallsplash.util.ScreenUtils;
@@ -32,6 +33,8 @@ import retrofit2.Response;
 public class CollectionListFragment extends Fragment {
 
     private static final String KEY_COLLECTIONS = "COLLECTION_LIST";
+    private static final String KEY_IS_WAIT_QUERY = "IS_WAIT_QUERY";
+    private static final String KEY_QUERY = "QUERY";
 
     private RecyclerView rvCollectionList;
     private TextView tvError;
@@ -40,10 +43,12 @@ public class CollectionListFragment extends Fragment {
     private UnsplashAPI api;
     private List<Collection> collectionList;
 
-    public static CollectionListFragment newInstance() {
-        Bundle args = new Bundle();
+    private boolean isWaitQuery;
+    private String query;
+
+    public static CollectionListFragment newInstance(boolean isWaitQuery) {
         CollectionListFragment fragment = new CollectionListFragment();
-        fragment.setArguments(args);
+        fragment.isWaitQuery = isWaitQuery;
         return fragment;
     }
 
@@ -51,12 +56,28 @@ public class CollectionListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         api = ApiManager.getInstance().getUnsplashApi(getString(R.string.application_id));
+
+        onRestoreInstanceState(savedInstanceState);
+    }
+
+    private void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            collectionList = savedInstanceState.getParcelableArrayList(KEY_COLLECTIONS);
+            isWaitQuery = savedInstanceState.getBoolean(KEY_IS_WAIT_QUERY);
+            query = savedInstanceState.getString(KEY_QUERY);
+        }
+
+        if (isWaitQuery) {
+            collectionList = new ArrayList<>();
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_COLLECTIONS, (ArrayList<? extends Parcelable>) collectionList);
+        outState.putBoolean(KEY_IS_WAIT_QUERY, isWaitQuery);
+        outState.putString(KEY_QUERY, query);
     }
 
     @Override
@@ -91,11 +112,10 @@ public class CollectionListFragment extends Fragment {
             }
         }));
 
-        if (savedInstanceState != null) {
-            collectionList = savedInstanceState.getParcelableArrayList(KEY_COLLECTIONS);
-            display();
-        } else {
+        if (collectionList == null) {
             getCollections();
+        } else {
+            display(collectionList);
         }
     }
 
@@ -105,9 +125,20 @@ public class CollectionListFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void display() {
-        adapter.setCollectionList(collectionList);
-        adapter.notifyDataSetChanged();
+    private void display(List<Collection> collections) {
+        if (collections == null) {
+            tvError.setVisibility(View.VISIBLE);
+            rvCollectionList.setVisibility(View.GONE);
+        } else if (collections.size() == 0) {
+            tvError.setVisibility(View.VISIBLE);
+            rvCollectionList.setVisibility(View.GONE);
+            tvError.setText(R.string.not_found_any_result);
+        } else {
+            tvError.setVisibility(View.GONE);
+            rvCollectionList.setVisibility(View.VISIBLE);
+            adapter.setCollectionList(collections);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void getCollections() {
@@ -117,13 +148,33 @@ public class CollectionListFragment extends Fragment {
             public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
                 if (response.isSuccessful()) {
                     collectionList = response.body();
-                    display();
+                    display(collectionList);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Collection>> call, Throwable t) {
+                display(null);
+            }
+        });
+    }
 
+    public void queryCollection(String query) {
+        Call<SearchCollectionResults> call = api.searchCollections(query, null, null);
+        call.enqueue(new Callback<SearchCollectionResults>() {
+            @Override
+            public void onResponse(Call<SearchCollectionResults> call, Response<SearchCollectionResults> response) {
+                if (response.isSuccessful()) {
+                    isWaitQuery = false;
+                    SearchCollectionResults results = response.body();
+                    collectionList = results.getResults();
+                    display(collectionList);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchCollectionResults> call, Throwable t) {
+                display(null);
             }
         });
     }

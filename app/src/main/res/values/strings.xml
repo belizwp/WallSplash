@@ -31,6 +31,7 @@
     <string name="name_download_file">WallSplash - %s</string>
     <string name="download_started">Download started...</string>
     <string name="need_download_permission">Need permission to download</string>
+    <string name="not_found_any_result">Not found any result.</string>
 
     <string-array name="my_collection_option">
         <item>Edit</item>

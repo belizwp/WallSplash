@@ -1,13 +1,9 @@
 package kmitl.afinal.nakarin58070064.wallsplash.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -16,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -70,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
             update header image bg
          */
         Blurry.with(this)
-                .color(Color.argb(100, 0, 0, 0))
                 .radius(2).sampling(32)
                 .async()
                 .from(ImageUtils.drawableToBitmap(ScreenUtils.getCurrentWallpaper(this)))
@@ -202,37 +198,24 @@ public class MainActivity extends AppCompatActivity {
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 int scrollRange = appBarLayout.getTotalScrollRange();
                 float offsetRatio = (float) (scrollRange + verticalOffset) / scrollRange;
-                int bright = (int) (offsetRatio * 255);
-                int color = Color.rgb(bright, bright, bright);
-                setToolBarOverflowIconColor(color);
                 headerWrapper.setAlpha(offsetRatio);
             }
         });
 
     }
 
-    private void setToolBarOverflowIconColor(int color) {
-        toolbar.setTitleTextColor(color);
-        Drawable drawable = toolbar.getOverflowIcon();
-        if (drawable != null) {
-            drawable = DrawableCompat.wrap(drawable);
-            DrawableCompat.setTint(drawable.mutate(), color);
-            toolbar.setOverflowIcon(drawable);
-        }
-
-        final Menu mm = toolbar.getMenu();
-        for (int i = 0; i < mm.size(); i++) {
-            Drawable icon = mm.getItem(i).getIcon();
-            if (icon != null) {
-                icon.mutate();
-                icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-            }
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_search) {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
