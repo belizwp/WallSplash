@@ -32,6 +32,8 @@
     <string name="download_started">Download started...</string>
     <string name="need_download_permission">Need permission to download</string>
     <string name="not_found_any_result">Not found any result.</string>
+    <string name="photo_added_to">Photo has been added to \'%s\'</string>
+    <string name="downloading_wallpaper">Downloading Wallpaper</string>
 
     <string-array name="my_collection_option">
         <item>Edit</item>

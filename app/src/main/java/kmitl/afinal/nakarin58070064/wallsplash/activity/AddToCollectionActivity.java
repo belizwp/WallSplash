@@ -3,8 +3,8 @@ package kmitl.afinal.nakarin58070064.wallsplash.activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -60,7 +60,7 @@ public class AddToCollectionActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onCollectionClick(MyCollection collection) {
+    public void onCollectionClick(final MyCollection collection) {
         Photo photo = getIntent().getParcelableExtra(Photo.class.getSimpleName());
 
         if (photo != null) {
@@ -71,9 +71,14 @@ public class AddToCollectionActivity extends AppCompatActivity implements
             new AddToCollectionTask(database, new AddToCollectionTask.OnPostAddListener() {
                 @Override
                 public void onPostAdd() {
+                    showToast(getString(R.string.photo_added_to, collection.getTitle()));
                     finish();
                 }
             }).execute(myPhoto);
         }
+    }
+
+    private void showToast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }

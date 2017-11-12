@@ -27,7 +27,7 @@
                 android:id="@+id/imageHeader"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/bg_holder_gradient"
+                android:foreground="@drawable/fg_header_mask"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
@@ -37,7 +37,6 @@
                 android:id="@+id/headerWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/fg_header_mask"
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax">
 

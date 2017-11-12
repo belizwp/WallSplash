@@ -1,11 +1,11 @@
 package kmitl.afinal.nakarin58070064.wallsplash.fragment;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,7 +25,6 @@ import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
 import kmitl.afinal.nakarin58070064.wallsplash.model.SearchCollectionResults;
 import kmitl.afinal.nakarin58070064.wallsplash.network.ApiManager;
 import kmitl.afinal.nakarin58070064.wallsplash.network.UnsplashAPI;
-import kmitl.afinal.nakarin58070064.wallsplash.util.ScreenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,6 +38,7 @@ public class CollectionListFragment extends Fragment {
     private RecyclerView rvCollectionList;
     private TextView tvError;
     private CollectionListAdapter adapter;
+    private ContentLoadingProgressBar progressBar;
 
     private UnsplashAPI api;
     private List<Collection> collectionList;
@@ -92,10 +92,11 @@ public class CollectionListFragment extends Fragment {
     private void initInstance(View rootView, Bundle savedInstanceState) {
         rvCollectionList = rootView.findViewById(R.id.rvCollectionList);
         tvError = rootView.findViewById(R.id.tvError);
+        progressBar = rootView.findViewById(R.id.progressBar);
 
         adapter = new CollectionListAdapter(getContext());
         rvCollectionList.setLayoutManager(new LinearLayoutManager(getContext()));
-        int space = (int) ScreenUtils.convertDpToPixel(8, getContext());
+        int space = getResources().getDimensionPixelSize(R.dimen.item_space);
         rvCollectionList.addItemDecoration(new GridSpacingItemDecoration(1, space, true));
         rvCollectionList.setAdapter(adapter);
         rvCollectionList.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),
@@ -112,6 +113,8 @@ public class CollectionListFragment extends Fragment {
             }
         }));
 
+        progressBar.show();
+
         if (collectionList == null) {
             getCollections();
         } else {
@@ -126,6 +129,8 @@ public class CollectionListFragment extends Fragment {
     }
 
     private void display(List<Collection> collections) {
+        progressBar.hide();
+
         if (collections == null) {
             tvError.setVisibility(View.VISIBLE);
             rvCollectionList.setVisibility(View.GONE);
@@ -142,6 +147,7 @@ public class CollectionListFragment extends Fragment {
     }
 
     private void getCollections() {
+        progressBar.show();
         Call<List<Collection>> call = api.getCollections(null, null);
         call.enqueue(new Callback<List<Collection>>() {
             @Override
@@ -160,6 +166,7 @@ public class CollectionListFragment extends Fragment {
     }
 
     public void queryCollection(String query) {
+        progressBar.show();
         Call<SearchCollectionResults> call = api.searchCollections(query, null, null);
         call.enqueue(new Callback<SearchCollectionResults>() {
             @Override

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +27,6 @@ import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
 import kmitl.afinal.nakarin58070064.wallsplash.model.SearchResults;
 import kmitl.afinal.nakarin58070064.wallsplash.network.ApiManager;
 import kmitl.afinal.nakarin58070064.wallsplash.network.UnsplashAPI;
-import kmitl.afinal.nakarin58070064.wallsplash.util.ScreenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +43,7 @@ public class WallpaperListFragment extends Fragment {
     private RecyclerView rvWallpaperList;
     private TextView tvError;
     private WallpaperListAdapter adapter;
+    private ContentLoadingProgressBar progressBar;
 
     private UnsplashAPI api;
     private List<Photo> photoList;
@@ -126,10 +127,11 @@ public class WallpaperListFragment extends Fragment {
     private void initInstance(View rootView, Bundle savedInstanceState) {
         rvWallpaperList = rootView.findViewById(R.id.rvWallpaperList);
         tvError = rootView.findViewById(R.id.tvError);
+        progressBar = rootView.findViewById(R.id.progressBar);
 
         adapter = new WallpaperListAdapter(getContext());
         rvWallpaperList.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        int space = (int) ScreenUtils.convertDpToPixel(8, getContext());
+        int space = getResources().getDimensionPixelSize(R.dimen.item_space);
         rvWallpaperList.addItemDecoration(new GridSpacingItemDecoration(3, space, true));
         rvWallpaperList.setAdapter(adapter);
         rvWallpaperList.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),
@@ -145,6 +147,8 @@ public class WallpaperListFragment extends Fragment {
 
             }
         }));
+
+        progressBar.show();
 
         if (photoList == null) {
             getPhotos();
@@ -169,6 +173,8 @@ public class WallpaperListFragment extends Fragment {
     }
 
     private void display(List<Photo> photos) {
+        progressBar.hide();
+
         if (photos == null) {
             tvError.setVisibility(View.VISIBLE);
             rvWallpaperList.setVisibility(View.GONE);
@@ -185,6 +191,8 @@ public class WallpaperListFragment extends Fragment {
     }
 
     private void getPhotos() {
+        progressBar.show();
+
         Call<List<Photo>> call;
 
         if (collectionId != null) {
@@ -220,6 +228,7 @@ public class WallpaperListFragment extends Fragment {
     }
 
     public void queryWallpaper(String query) {
+        progressBar.show();
         Call<SearchResults> call = api.searchPhotos(query, null, null);
         call.enqueue(new Callback<SearchResults>() {
             @Override

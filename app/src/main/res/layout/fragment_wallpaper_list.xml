@@ -11,4 +11,6 @@
 
     <include layout="@layout/include_error" />
 
+    <include layout="@layout/include_progressbar" />
+
 </FrameLayout>
