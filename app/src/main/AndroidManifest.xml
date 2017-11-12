@@ -22,7 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.WallpaperActivity" />
+        <activity
+            android:name=".activity.WallpaperActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.CollectionActivity" />
         <activity android:name=".activity.MyCollActivity" />
         <activity android:name=".activity.MyWallActivity" />

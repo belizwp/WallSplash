@@ -1,6 +1,7 @@
 package kmitl.afinal.nakarin58070064.wallsplash.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -42,6 +43,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
     private ImageButton btnOption;
     private View bottomSheetView;
     private BottomSheetDialog bottomSheetDialog;
+    private ProgressDialog pDialog;
 
     private final int REQUST_DOWNLOAD = 0;
 
@@ -165,6 +167,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setWallpaper() {
+        showProgressDialog();
         new DownloadWallpaperTask(getApplicationContext(), new DownloadWallpaperTask.OnPostLoadListener() {
             @Override
             public void onPostLoad(File file) {
@@ -178,9 +181,11 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
                     intent.setDataAndType(uri, "image/jpeg");
                     intent.putExtra("mimeType", "image/jpeg");
                     startActivity(Intent.createChooser(intent, getString(R.string.set_as)));
+
+                    dismissProgressDialog();
                 }
             }
-        }).execute(photo.getUrls().getRegular());
+        }).execute(photo.getUrls().getFull());
     }
 
     private void addToCollection() {
@@ -251,6 +256,22 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
                 }
                 return;
             }
+        }
+    }
+
+    private void showProgressDialog() {
+        if (pDialog == null) {
+            pDialog = new ProgressDialog(WallpaperActivity.this);
+            pDialog.setMessage(getString(R.string.downloading_wallpaper));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+        }
+        pDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (pDialog != null && pDialog.isShowing()) {
+            pDialog.dismiss();
         }
     }
 }
