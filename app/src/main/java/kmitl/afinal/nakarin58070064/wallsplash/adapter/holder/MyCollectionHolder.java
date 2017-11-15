@@ -11,11 +11,14 @@ public class MyCollectionHolder extends RecyclerView.ViewHolder {
 
     public ImageView imageView;
     public TextView textTitle;
+    public TextView textPhotos;
 
     public MyCollectionHolder(View itemView) {
         super(itemView);
 
         imageView = itemView.findViewById(R.id.imageView);
         textTitle = itemView.findViewById(R.id.tvTitle);
+        textPhotos = itemView.findViewById(R.id.totalPhotos);
+
     }
 }

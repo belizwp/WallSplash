@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,13 @@ public class MyCollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MyCollectionHolder) {
             MyCollection myCollection = myCollectionList.get(position - 1);
-            ((MyCollectionHolder) holder).textTitle.setText(myCollection.getTitle());
+            MyCollectionHolder myCollectionHolder = (MyCollectionHolder) holder;
+            myCollectionHolder.textTitle.setText(myCollection.getTitle());
+            myCollectionHolder.textPhotos.setText(context.getString(R.string.total_photos, myCollection.getPhotos()));
+
+            Glide.with(context)
+                    .load(myCollection.getCover())
+                    .into(myCollectionHolder.imageView);
         }
     }
 

@@ -24,4 +24,11 @@ public interface MyCollectionDao {
 
     @Delete
     void delete(MyCollection myCollection);
+
+    @Query("SELECT MyCollection.`id`, MyCollection.`title`, MyCollection.`desc`, imageSmall AS cover, COUNT(MyPhoto.id) AS photos " +
+            "FROM MyCollection " +
+            "LEFT JOIN MyPhoto " +
+            "ON MyCollection.id = MyPhoto.current_collection " +
+            "GROUP BY MyCollection.id")
+    List<MyCollection> getAllWithCover();
 }

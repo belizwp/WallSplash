@@ -19,7 +19,7 @@ public class LoadCollectionTask extends AsyncTask<Void, Void, List<MyCollection>
 
     @Override
     protected List<MyCollection> doInBackground(Void... voids) {
-        return db.myCollectionDao().getAll();
+        return db.myCollectionDao().getAllWithCover();
     }
 
     @Override

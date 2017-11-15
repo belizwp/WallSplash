@@ -13,6 +13,8 @@ public class MyCollection implements Parcelable {
 
     private String title;
     private String desc;
+    private String cover;
+    private int photos;
 
     public MyCollection() {
     }
@@ -21,6 +23,8 @@ public class MyCollection implements Parcelable {
         id = in.readInt();
         title = in.readString();
         desc = in.readString();
+        cover = in.readString();
+        photos = in.readInt();
     }
 
     @Override
@@ -28,6 +32,8 @@ public class MyCollection implements Parcelable {
         dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(desc);
+        dest.writeString(cover);
+        dest.writeInt(photos);
     }
 
     @Override
@@ -69,5 +75,32 @@ public class MyCollection implements Parcelable {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public int getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(int photos) {
+        this.photos = photos;
+    }
+
+    @Override
+    public String toString() {
+        return "MyCollection{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", desc='" + desc + '\'' +
+                ", cover='" + cover + '\'' +
+                ", photos=" + photos +
+                '}';
     }
 }
