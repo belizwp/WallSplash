@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorRipple">#64FFFFFF</color>
     <color name="unSelecetedTab">#c4c4c4</color>
+    <color name="fg_mycollection">#32000000</color>
 </resources>

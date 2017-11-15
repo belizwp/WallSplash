@@ -20,7 +20,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:foreground="@drawable/fg_collection_mask">
+            android:foreground="@color/fg_mycollection">
 
             <ImageView
                 android:id="@+id/imageView"
