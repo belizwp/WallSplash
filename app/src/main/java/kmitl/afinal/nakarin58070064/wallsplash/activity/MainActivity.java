@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         tvViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MyCollActivity.class);
+                Intent intent = new Intent(MainActivity.this, MyCollectionActivity.class);
                 startActivity(intent);
             }
         });
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void transition(View view, Photo photo) {
-        Intent intent = new Intent(this, WallpaperActivity.class);
+        Intent intent = new Intent(this, WallpaperPreviewActivity.class);
         intent.putExtra(Photo.class.getSimpleName(), photo);
         intent.putExtra(KEY_IS_MY_PHOTO_LIST, true);
 

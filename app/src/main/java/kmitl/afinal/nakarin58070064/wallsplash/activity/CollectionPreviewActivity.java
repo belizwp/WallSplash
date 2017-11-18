@@ -15,7 +15,7 @@ import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.fragment.WallpaperListFragment;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Collection;
 
-public class CollectionActivity extends AppCompatActivity {
+public class CollectionPreviewActivity extends AppCompatActivity {
 
     private Collection collection;
 

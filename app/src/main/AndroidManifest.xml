@@ -23,11 +23,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.WallpaperActivity"
+            android:name=".activity.WallpaperPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".activity.CollectionActivity" />
-        <activity android:name=".activity.MyCollActivity" />
-        <activity android:name=".activity.MyWallActivity" />
+        <activity android:name=".activity.CollectionPreviewActivity" />
+        <activity android:name=".activity.MyCollectionActivity" />
+        <activity android:name=".activity.MyWallpaperActivity" />
         <activity android:name=".activity.AddToCollectionActivity" />
 
         <provider

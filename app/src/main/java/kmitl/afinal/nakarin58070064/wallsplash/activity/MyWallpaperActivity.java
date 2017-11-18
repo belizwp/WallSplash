@@ -15,7 +15,7 @@ import kmitl.afinal.nakarin58070064.wallsplash.model.MyCollection;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyPhoto;
 import kmitl.afinal.nakarin58070064.wallsplash.task.LoadMyPhotoTask;
 
-public class MyWallActivity extends AppCompatActivity {
+public class MyWallpaperActivity extends AppCompatActivity {
 
     private WallSplashDatabase database;
 

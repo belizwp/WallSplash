@@ -19,7 +19,7 @@ import java.util.List;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.WallSplash;
-import kmitl.afinal.nakarin58070064.wallsplash.activity.WallpaperActivity;
+import kmitl.afinal.nakarin58070064.wallsplash.activity.WallpaperPreviewActivity;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.WallpaperListAdapter;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.GridSpacingItemDecoration;
@@ -159,7 +159,7 @@ public class WallpaperListFragment extends Fragment {
     }
 
     private void startWallpaperActivity(View view, Photo photo) {
-        Intent intent = new Intent(getContext(), WallpaperActivity.class);
+        Intent intent = new Intent(getContext(), WallpaperPreviewActivity.class);
         intent.putExtra(Photo.class.getSimpleName(), photo);
         intent.putExtra(KEY_IS_MY_PHOTO_LIST, isMyPhotoList);
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    tools:context="kmitl.afinal.nakarin58070064.wallsplash.activity.WallpaperActivity">
+    tools:context="kmitl.afinal.nakarin58070064.wallsplash.activity.WallpaperPreviewActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolBar"

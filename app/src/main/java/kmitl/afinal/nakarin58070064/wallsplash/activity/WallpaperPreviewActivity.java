@@ -31,7 +31,7 @@ import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
 import kmitl.afinal.nakarin58070064.wallsplash.task.DownloadWallpaperTask;
 import kmitl.afinal.nakarin58070064.wallsplash.util.DownloadHelper;
 
-public class WallpaperActivity extends AppCompatActivity implements View.OnClickListener {
+public class WallpaperPreviewActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String KEY_IS_MY_PHOTO_LIST = "IS_MY_PHOTO_LIST";
 
@@ -81,7 +81,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
 
         applyLowQualityImage();
 
-        Glide.with(WallpaperActivity.this)
+        Glide.with(WallpaperPreviewActivity.this)
                 .load(photo.getUser().getProfileImage().getMedium())
                 .into(imagePhrofile);
 
@@ -91,7 +91,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void applyLowQualityImage() {
-        Glide.with(WallpaperActivity.this)
+        Glide.with(WallpaperPreviewActivity.this)
                 .load(photo.getUrls().getSmall())
                 .apply(RequestOptions.overrideOf(getResources().getInteger(R.integer.max_image_size)))
                 .into(new SimpleTarget<Drawable>() {
@@ -104,7 +104,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void applyHighQualityImage() {
-        Glide.with(WallpaperActivity.this)
+        Glide.with(WallpaperPreviewActivity.this)
                 .load(photo.getUrls().getRegular())
                 .apply(RequestOptions.overrideOf(getResources().getInteger(R.integer.max_image_size)))
                 .into(new SimpleTarget<Drawable>() {
@@ -189,7 +189,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void addToCollection() {
-        Intent intent = new Intent(WallpaperActivity.this, AddToCollectionActivity.class);
+        Intent intent = new Intent(WallpaperPreviewActivity.this, AddToCollectionActivity.class);
         intent.putExtra(Photo.class.getSimpleName(), photo);
         startActivity(intent);
     }
@@ -254,7 +254,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
 
     private void showProgressDialog() {
         if (pDialog == null) {
-            pDialog = new ProgressDialog(WallpaperActivity.this);
+            pDialog = new ProgressDialog(WallpaperPreviewActivity.this);
             pDialog.setMessage(getString(R.string.downloading_wallpaper));
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);

@@ -10,7 +10,7 @@ import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.fragment.MyCollectionFragment;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyCollection;
 
-public class MyCollActivity extends AppCompatActivity implements
+public class MyCollectionActivity extends AppCompatActivity implements
         MyCollectionFragment.MyCollectionFragmentListener {
 
     @Override
@@ -46,7 +46,7 @@ public class MyCollActivity extends AppCompatActivity implements
 
     @Override
     public void onCollectionClick(MyCollection collection) {
-        Intent intent = new Intent(this, MyWallActivity.class);
+        Intent intent = new Intent(this, MyWallpaperActivity.class);
         intent.putExtra(MyCollection.class.getSimpleName(), collection);
         startActivity(intent);
     }
