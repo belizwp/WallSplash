@@ -18,15 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
+import kmitl.afinal.nakarin58070064.wallsplash.WallSplash;
 import kmitl.afinal.nakarin58070064.wallsplash.activity.WallpaperActivity;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.WallpaperListAdapter;
-import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
+import kmitl.afinal.nakarin58070064.wallsplash.adapter.GridSpacingItemDecoration;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyPhoto;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
 import kmitl.afinal.nakarin58070064.wallsplash.model.SearchResults;
-import kmitl.afinal.nakarin58070064.wallsplash.network.ApiManager;
-import kmitl.afinal.nakarin58070064.wallsplash.network.UnsplashAPI;
+import kmitl.afinal.nakarin58070064.wallsplash.network.api.ApiManager;
+import kmitl.afinal.nakarin58070064.wallsplash.network.api.UnsplashAPI;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -139,7 +140,7 @@ public class WallpaperListFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Photo photo = photoList.get(position);
-                transition(view, photo);
+                startWallpaperActivity(view, photo);
             }
 
             @Override
@@ -157,7 +158,7 @@ public class WallpaperListFragment extends Fragment {
         }
     }
 
-    private void transition(View view, Photo photo) {
+    private void startWallpaperActivity(View view, Photo photo) {
         Intent intent = new Intent(getContext(), WallpaperActivity.class);
         intent.putExtra(Photo.class.getSimpleName(), photo);
         intent.putExtra(KEY_IS_MY_PHOTO_LIST, isMyPhotoList);
@@ -196,9 +197,9 @@ public class WallpaperListFragment extends Fragment {
         Call<List<Photo>> call;
 
         if (collectionId != null) {
-            call = api.getCollectionPhotos(collectionId, null, null);
+            call = api.getCollectionPhotos(collectionId, null, WallSplash.MAX_RESULT_PER_PAGE);
         } else {
-            call = api.getPhotos(null, null, null);
+            call = api.getPhotos(null, WallSplash.MAX_RESULT_PER_PAGE, null);
         }
 
         call.enqueue(new Callback<List<Photo>>() {
@@ -229,7 +230,7 @@ public class WallpaperListFragment extends Fragment {
 
     public void queryWallpaper(String query) {
         progressBar.show();
-        Call<SearchResults> call = api.searchPhotos(query, null, null);
+        Call<SearchResults> call = api.searchPhotos(query, null, WallSplash.MAX_RESULT_PER_PAGE);
         call.enqueue(new Callback<SearchResults>() {
             @Override
             public void onResponse(Call<SearchResults> call, Response<SearchResults> response) {

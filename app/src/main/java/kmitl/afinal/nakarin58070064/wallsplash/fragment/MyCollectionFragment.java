@@ -23,7 +23,7 @@ import kmitl.afinal.nakarin58070064.wallsplash.adapter.MyCollectionAdapter;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
 import kmitl.afinal.nakarin58070064.wallsplash.database.DatabaseManager;
 import kmitl.afinal.nakarin58070064.wallsplash.database.WallSplashDatabase;
-import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
+import kmitl.afinal.nakarin58070064.wallsplash.adapter.GridSpacingItemDecoration;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyCollection;
 import kmitl.afinal.nakarin58070064.wallsplash.task.AddCollectionTask;
 import kmitl.afinal.nakarin58070064.wallsplash.task.DeleteCollectionTask;

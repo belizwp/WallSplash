@@ -29,7 +29,7 @@ import kmitl.afinal.nakarin58070064.wallsplash.BuildConfig;
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
 import kmitl.afinal.nakarin58070064.wallsplash.task.DownloadWallpaperTask;
-import kmitl.afinal.nakarin58070064.wallsplash.util.WallpaperDownloader;
+import kmitl.afinal.nakarin58070064.wallsplash.util.DownloadHelper;
 
 public class WallpaperActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -195,7 +195,7 @@ public class WallpaperActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void download() {
-        WallpaperDownloader.prepare(this)
+        DownloadHelper.prepare(this)
                 .photo(photo)
                 .start();
     }

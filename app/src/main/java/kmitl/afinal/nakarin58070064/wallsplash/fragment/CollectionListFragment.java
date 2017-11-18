@@ -17,14 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kmitl.afinal.nakarin58070064.wallsplash.R;
+import kmitl.afinal.nakarin58070064.wallsplash.WallSplash;
 import kmitl.afinal.nakarin58070064.wallsplash.activity.CollectionActivity;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.CollectionListAdapter;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Collection;
-import kmitl.afinal.nakarin58070064.wallsplash.model.GridSpacingItemDecoration;
+import kmitl.afinal.nakarin58070064.wallsplash.adapter.GridSpacingItemDecoration;
 import kmitl.afinal.nakarin58070064.wallsplash.model.SearchCollectionResults;
-import kmitl.afinal.nakarin58070064.wallsplash.network.ApiManager;
-import kmitl.afinal.nakarin58070064.wallsplash.network.UnsplashAPI;
+import kmitl.afinal.nakarin58070064.wallsplash.network.api.ApiManager;
+import kmitl.afinal.nakarin58070064.wallsplash.network.api.UnsplashAPI;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -104,7 +105,7 @@ public class CollectionListFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Collection collection = collectionList.get(position);
-                transition(view, collection);
+                startCollectionActivity(collection);
             }
 
             @Override
@@ -122,7 +123,7 @@ public class CollectionListFragment extends Fragment {
         }
     }
 
-    private void transition(View view, Collection collection) {
+    private void startCollectionActivity(Collection collection) {
         Intent intent = new Intent(getContext(), CollectionActivity.class);
         intent.putExtra(Collection.class.getSimpleName(), collection);
         startActivity(intent);
@@ -148,7 +149,7 @@ public class CollectionListFragment extends Fragment {
 
     private void getCollections() {
         progressBar.show();
-        Call<List<Collection>> call = api.getCollections(null, null);
+        Call<List<Collection>> call = api.getCollections(null, WallSplash.MAX_RESULT_PER_PAGE);
         call.enqueue(new Callback<List<Collection>>() {
             @Override
             public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
@@ -167,7 +168,7 @@ public class CollectionListFragment extends Fragment {
 
     public void queryCollection(String query) {
         progressBar.show();
-        Call<SearchCollectionResults> call = api.searchCollections(query, null, null);
+        Call<SearchCollectionResults> call = api.searchCollections(query, null, WallSplash.MAX_RESULT_PER_PAGE);
         call.enqueue(new Callback<SearchCollectionResults>() {
             @Override
             public void onResponse(Call<SearchCollectionResults> call, Response<SearchCollectionResults> response) {

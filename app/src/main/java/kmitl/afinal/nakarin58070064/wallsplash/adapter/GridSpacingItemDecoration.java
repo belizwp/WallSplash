@@ -1,4 +1,4 @@
-package kmitl.afinal.nakarin58070064.wallsplash.model;
+package kmitl.afinal.nakarin58070064.wallsplash.adapter;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

@@ -13,16 +13,16 @@ import java.io.File;
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
 
-public class WallpaperDownloader {
+public class DownloadHelper {
 
     private final Context context;
     private Photo photo;
 
-    private WallpaperDownloader(Context context) {
+    private DownloadHelper(Context context) {
         this.context = context;
     }
 
-    public WallpaperDownloader photo(@NonNull Photo photo) {
+    public DownloadHelper photo(@NonNull Photo photo) {
         this.photo = photo;
         return this;
     }
@@ -33,7 +33,6 @@ public class WallpaperDownloader {
         File target = new File(directory, fileName);
         if (!directory.exists()) {
             if (!directory.mkdirs()) {
-                Log.d("WallpaperDownloader", "Unable to create directory " + directory.toString());
                 return;
             }
         }
@@ -60,8 +59,8 @@ public class WallpaperDownloader {
         Toast.makeText(context, R.string.download_started, Toast.LENGTH_SHORT).show();
     }
 
-    public static WallpaperDownloader prepare(@NonNull Context context) {
-        return new WallpaperDownloader(context);
+    public static DownloadHelper prepare(@NonNull Context context) {
+        return new DownloadHelper(context);
     }
 
 }

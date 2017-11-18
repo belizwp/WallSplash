@@ -1,4 +1,4 @@
-package kmitl.afinal.nakarin58070064.wallsplash.network;
+package kmitl.afinal.nakarin58070064.wallsplash.network.api;
 
 import android.os.Build;
 import android.util.Log;
@@ -15,6 +15,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import kmitl.afinal.nakarin58070064.wallsplash.network.Tls12SocketFactory;
 import okhttp3.ConnectionSpec;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;

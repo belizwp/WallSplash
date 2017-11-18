@@ -1,4 +1,4 @@
-package kmitl.afinal.nakarin58070064.wallsplash.network;
+package kmitl.afinal.nakarin58070064.wallsplash.network.api;
 
 import java.util.Collection;
 import java.util.List;
