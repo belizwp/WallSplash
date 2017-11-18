@@ -16,7 +16,7 @@
         android:layout_marginBottom="4dp"
         android:background="@color/colorPrimary"
         app:iconifiedByDefault="false"
-        app:queryHint="Search" />
+        app:queryHint="@string/search" />
 
     <FrameLayout
         android:id="@+id/content_container"
