@@ -36,6 +36,7 @@
     <string name="downloading_wallpaper">Loading. Please wait...</string>
     <string name="search">Search</string>
     <string name="about">About</string>
+    <string name="about_credit">Unsplash.com\n\nBeautiful, free photos.\nGifted by the world’s most generous community of photographers. </string>
 
     <string-array name="my_collection_option">
         <item>Edit</item>

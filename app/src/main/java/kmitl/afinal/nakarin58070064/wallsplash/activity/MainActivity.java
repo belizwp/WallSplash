@@ -215,6 +215,9 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_search) {
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
+        } else if (item.getItemId() == R.id.action_about) {
+            Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
