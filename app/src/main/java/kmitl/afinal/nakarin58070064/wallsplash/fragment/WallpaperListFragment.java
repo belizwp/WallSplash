@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
@@ -26,13 +27,10 @@ import kmitl.afinal.nakarin58070064.wallsplash.adapter.GridSpacingItemDecoration
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyPhoto;
 import kmitl.afinal.nakarin58070064.wallsplash.model.Photo;
 import kmitl.afinal.nakarin58070064.wallsplash.model.SearchResults;
+import kmitl.afinal.nakarin58070064.wallsplash.network.Service;
 import kmitl.afinal.nakarin58070064.wallsplash.network.api.ApiManager;
-import kmitl.afinal.nakarin58070064.wallsplash.network.api.UnsplashAPI;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class WallpaperListFragment extends Fragment {
+public class WallpaperListFragment extends Fragment implements Service.ServicePhotoListener {
 
     private static final String KEY_PHOTO_LIST = "PHOTO_LIST";
     private static final String KEY_COLLECTION_ID = "COLLECTION_ID";
@@ -46,7 +44,7 @@ public class WallpaperListFragment extends Fragment {
     private WallpaperListAdapter adapter;
     private ContentLoadingProgressBar progressBar;
 
-    private UnsplashAPI api;
+    private Service service;
     private List<Photo> photoList;
 
     private String collectionId;
@@ -82,8 +80,8 @@ public class WallpaperListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        api = ApiManager.getInstance().getUnsplashApi(getContext().getString(R.string.application_id));
-
+        service = new Service(ApiManager.getInstance()
+                .getUnsplashApi(getContext().getString(R.string.application_id)), this);
         onRestoreInstanceState(savedInstanceState);
     }
 
@@ -110,7 +108,6 @@ public class WallpaperListFragment extends Fragment {
                 isMyPhotoList = getArguments().getBoolean(KEY_IS_MY_PHOTO_LIST);
             }
         }
-
 
         if (isWaitQuery) {
             photoList = new ArrayList<>();
@@ -173,7 +170,7 @@ public class WallpaperListFragment extends Fragment {
         }
     }
 
-    private void display(List<Photo> photos) {
+    private void display(@Nullable List<Photo> photos) {
         progressBar.hide();
 
         if (photos == null) {
@@ -184,6 +181,7 @@ public class WallpaperListFragment extends Fragment {
             rvWallpaperList.setVisibility(View.GONE);
             tvError.setText(R.string.not_found_any_result);
         } else {
+            photoList = photos;
             tvError.setVisibility(View.GONE);
             rvWallpaperList.setVisibility(View.VISIBLE);
             adapter.setPhotoList(photos);
@@ -193,29 +191,17 @@ public class WallpaperListFragment extends Fragment {
 
     private void getPhotos() {
         progressBar.show();
-
-        Call<List<Photo>> call;
-
         if (collectionId != null) {
-            call = api.getCollectionPhotos(collectionId, null, WallSplash.MAX_RESULT_PER_PAGE);
+            service.getCollectionPhotos(collectionId, null, WallSplash.MAX_RESULT_PER_PAGE);
         } else {
-            call = api.getPhotos(null, WallSplash.MAX_RESULT_PER_PAGE, null);
+            service.getPhotos(null, WallSplash.MAX_RESULT_PER_PAGE, null);
         }
+    }
 
-        call.enqueue(new Callback<List<Photo>>() {
-            @Override
-            public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
-                if (response.isSuccessful()) {
-                    photoList = response.body();
-                    display(photoList);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Photo>> call, Throwable t) {
-                display(null);
-            }
-        });
+    public void queryWallpaper(String query) {
+        progressBar.show();
+        this.query = query;
+        service.searchPhotos(query, null, WallSplash.MAX_RESULT_PER_PAGE);
     }
 
     private List<Photo> convertMyPhotoToPhoto(List<MyPhoto> myPhotoList) {
@@ -228,24 +214,19 @@ public class WallpaperListFragment extends Fragment {
         return newPhotoList;
     }
 
-    public void queryWallpaper(String query) {
-        progressBar.show();
-        Call<SearchResults> call = api.searchPhotos(query, null, WallSplash.MAX_RESULT_PER_PAGE);
-        call.enqueue(new Callback<SearchResults>() {
-            @Override
-            public void onResponse(Call<SearchResults> call, Response<SearchResults> response) {
-                if (response.isSuccessful()) {
-                    isWaitQuery = false;
-                    SearchResults searchResults = response.body();
-                    photoList = searchResults.getResults();
-                    display(photoList);
-                }
-            }
+    @Override
+    public void onLoadPhotosSuccess(List<Photo> photoList) {
+        display(photoList);
+    }
 
-            @Override
-            public void onFailure(Call<SearchResults> call, Throwable t) {
-                display(null);
-            }
-        });
+    @Override
+    public void onSearchResult(SearchResults searchResults) {
+        isWaitQuery = false;
+        display(searchResults.getResults());
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        display(null);
     }
 }

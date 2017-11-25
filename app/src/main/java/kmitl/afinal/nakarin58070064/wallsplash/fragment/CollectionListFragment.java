@@ -24,13 +24,11 @@ import kmitl.afinal.nakarin58070064.wallsplash.adapter.RecyclerItemClickListener
 import kmitl.afinal.nakarin58070064.wallsplash.model.Collection;
 import kmitl.afinal.nakarin58070064.wallsplash.adapter.GridSpacingItemDecoration;
 import kmitl.afinal.nakarin58070064.wallsplash.model.SearchCollectionResults;
+import kmitl.afinal.nakarin58070064.wallsplash.network.Service;
 import kmitl.afinal.nakarin58070064.wallsplash.network.api.ApiManager;
 import kmitl.afinal.nakarin58070064.wallsplash.network.api.UnsplashAPI;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class CollectionListFragment extends Fragment {
+public class CollectionListFragment extends Fragment implements Service.ServiceCollectionListener {
 
     private static final String KEY_COLLECTIONS = "COLLECTION_LIST";
     private static final String KEY_IS_WAIT_QUERY = "IS_WAIT_QUERY";
@@ -41,7 +39,7 @@ public class CollectionListFragment extends Fragment {
     private CollectionListAdapter adapter;
     private ContentLoadingProgressBar progressBar;
 
-    private UnsplashAPI api;
+    private Service service;
     private List<Collection> collectionList;
 
     private boolean isWaitQuery;
@@ -56,7 +54,8 @@ public class CollectionListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        api = ApiManager.getInstance().getUnsplashApi(getString(R.string.application_id));
+        UnsplashAPI api = ApiManager.getInstance().getUnsplashApi(getString(R.string.application_id));
+        service = new Service(api, this);
 
         onRestoreInstanceState(savedInstanceState);
     }
@@ -88,7 +87,6 @@ public class CollectionListFragment extends Fragment {
         initInstance(rootView, savedInstanceState);
         return rootView;
     }
-
 
     private void initInstance(View rootView, Bundle savedInstanceState) {
         rvCollectionList = rootView.findViewById(R.id.rvCollectionList);
@@ -140,6 +138,7 @@ public class CollectionListFragment extends Fragment {
             rvCollectionList.setVisibility(View.GONE);
             tvError.setText(R.string.not_found_any_result);
         } else {
+            collectionList = collections;
             tvError.setVisibility(View.GONE);
             rvCollectionList.setVisibility(View.VISIBLE);
             adapter.setCollectionList(collections);
@@ -149,41 +148,28 @@ public class CollectionListFragment extends Fragment {
 
     private void getCollections() {
         progressBar.show();
-        Call<List<Collection>> call = api.getCollections(null, WallSplash.MAX_RESULT_PER_PAGE);
-        call.enqueue(new Callback<List<Collection>>() {
-            @Override
-            public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
-                if (response.isSuccessful()) {
-                    collectionList = response.body();
-                    display(collectionList);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Collection>> call, Throwable t) {
-                display(null);
-            }
-        });
+        service.getCollections(null, WallSplash.MAX_RESULT_PER_PAGE);
     }
 
     public void queryCollection(String query) {
         progressBar.show();
-        Call<SearchCollectionResults> call = api.searchCollections(query, null, WallSplash.MAX_RESULT_PER_PAGE);
-        call.enqueue(new Callback<SearchCollectionResults>() {
-            @Override
-            public void onResponse(Call<SearchCollectionResults> call, Response<SearchCollectionResults> response) {
-                if (response.isSuccessful()) {
-                    isWaitQuery = false;
-                    SearchCollectionResults results = response.body();
-                    collectionList = results.getResults();
-                    display(collectionList);
-                }
-            }
+        this.query = query;
+        service.searchCollections(query, null, WallSplash.MAX_RESULT_PER_PAGE);
+    }
 
-            @Override
-            public void onFailure(Call<SearchCollectionResults> call, Throwable t) {
-                display(null);
-            }
-        });
+    @Override
+    public void onLoadCollectionSuccess(List<Collection> collectionList) {
+        display(collectionList);
+    }
+
+    @Override
+    public void onSearchCollectionResult(SearchCollectionResults searchCollectionResults) {
+        isWaitQuery = false;
+        display(searchCollectionResults.getResults());
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        display(null);
     }
 }
