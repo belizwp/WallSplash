@@ -2,18 +2,14 @@ package kmitl.afinal.nakarin58070064.wallsplash.database;
 
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
 import java.util.List;
 
 import kmitl.afinal.nakarin58070064.wallsplash.dao.MyCollectionDao;
 import kmitl.afinal.nakarin58070064.wallsplash.dao.MyPhotoDao;
-import kmitl.afinal.nakarin58070064.wallsplash.database.DatabaseManager;
-import kmitl.afinal.nakarin58070064.wallsplash.database.WallSplashDatabase;
 import kmitl.afinal.nakarin58070064.wallsplash.model.MyCollection;
 
 import static org.hamcrest.MatcherAssert.assertThat;

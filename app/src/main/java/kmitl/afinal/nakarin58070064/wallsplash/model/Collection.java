@@ -45,7 +45,7 @@ public class Collection implements Parcelable {
     @Expose
     private Links links;
 
-    protected Collection(Parcel in) {
+    public Collection(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {
@@ -68,6 +68,10 @@ public class Collection implements Parcelable {
         coverPhoto = in.readParcelable(CoverPhoto.class.getClassLoader());
         user = in.readParcelable(User.class.getClassLoader());
         links = in.readParcelable(Links.class.getClassLoader());
+    }
+
+    public Collection() {
+        this.user = new User();
     }
 
     @Override
