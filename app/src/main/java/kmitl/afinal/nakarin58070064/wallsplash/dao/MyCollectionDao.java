@@ -31,4 +31,7 @@ public interface MyCollectionDao {
             "ON MyCollection.id = MyPhoto.current_collection " +
             "GROUP BY MyCollection.id")
     List<MyCollection> getAllWithCover();
+
+    @Query("DELETE FROM MyCollection")
+    void nukeTable();
 }

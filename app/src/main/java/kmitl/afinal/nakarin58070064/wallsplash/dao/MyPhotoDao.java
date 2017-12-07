@@ -20,4 +20,7 @@ public interface MyPhotoDao {
 
     @Query("SELECT * FROM MyPhoto ORDER BY time_create DESC LIMIT :limit")
     List<MyPhoto> getLast(int limit);
+
+    @Query("DELETE FROM MyPhoto")
+    void nukeTable();
 }
