@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import kmitl.afinal.nakarin58070064.wallsplash.R;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -59,6 +60,15 @@ public class SearchActivityTest {
         searchAutoComplete2.perform(pressImeActionButton());
 
         SystemClock.sleep(3000);
+
+        ViewInteraction tabView = onView(
+                allOf(childAtPosition(
+                        childAtPosition(
+                                withId(R.id.tabLayout),
+                                0),
+                        1),
+                        isDisplayed()));
+        tabView.perform(click());
     }
 
     private static Matcher<View> childAtPosition(
